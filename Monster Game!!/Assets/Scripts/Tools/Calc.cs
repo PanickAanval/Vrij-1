@@ -24,6 +24,14 @@ namespace Joeri.Tools
             return current;
         }
 
+        /// <returns>The 'current' float, with 'amount' added to it, but loops around with 'max' as it's max value.</returns>
+        public static float Scroll(float current, float amount, float max)
+        {
+            current += amount;
+            current %= max;
+            return current;
+        }
+
         /// <returns>The passed in 'color', but with the passed in 'opacity'.</returns>
         public static Color SetOpacity(Color color, float opacity)
         {
@@ -107,6 +115,23 @@ namespace Joeri.Tools
             var whateverthetameans = Random.Range(0f, 1f) * 2 * Mathf.PI;
 
             return new Vector2(r * Mathf.Cos(whateverthetameans), r * Mathf.Sin(whateverthetameans));
+        }
+
+        /// <returns>The angle between a 2D direction vector, and an upward direction, with a range of 0-360 degrees.</returns>
+        public static float VectorToAngle(Vector2 direction)
+        {
+            var signedAngle = Vector2.SignedAngle(direction, Vector2.up);
+
+            if (signedAngle < 0) signedAngle += 360f;
+            return signedAngle;
+        }
+
+        /// <returns>A 2D direction vector based on the passed in degrees.</returns>
+        public static Vector2 AngleToVector(float degrees)
+        {
+            //  The degrees are converted to radians, but for the sake of memory, are kept in the variable called 'degrees'.
+            degrees *= Mathf.Deg2Rad;
+            return new Vector2(Mathf.Cos(degrees), Mathf.Sin(degrees));
         }
     }
 }
