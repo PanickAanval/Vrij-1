@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     private AccelerationLogic.Flat m_acceleration = new AccelerationLogic.Flat();
 
     public Vector3 velocity { get => Calc.FlatToVector(m_acceleration.velocity); }
+    public Vector2 horizontalVelocity { get => m_acceleration.velocity; }
 
     private void Update()
     {

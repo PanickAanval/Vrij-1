@@ -325,6 +325,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8031654231833575590, guid: 7bd2cb16565da644e873c75a7a4be9d8,
         type: 3}
+      propertyPath: grip
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031654231833575590, guid: 7bd2cb16565da644e873c75a7a4be9d8,
+        type: 3}
       propertyPath: m_camera
       value: 
       objectReference: {fileID: 1947368357}

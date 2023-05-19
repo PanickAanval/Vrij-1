@@ -14,68 +14,40 @@ public class Camera : MonoBehaviour
     [SerializeField] private float m_adjustmentTime = 3f;
 
     private Vector3 m_followVelocity = Vector3.zero;
-    private Vector3 m_dirFromTarget = Vector3.zero;
-
-    private Vector3 offsetFromTarget { get => transform.position - m_target.position; }
     private float m_adjustmentVelocity = 0f;
+
+    private CameraRecords m_records = null;
 
     private void Start()
     {
-        m_dirFromTarget = offsetFromTarget.normalized;
+        m_records = new CameraRecords(transform, m_target);
     }
 
     private void Update()
     {
         transform.position = GetDesiredPosition();
-        transform.LookAt(m_target);
+        transform.rotation = Quaternion.LookRotation(m_target.position - transform.position, Vector3.up);
+        m_records = new CameraRecords(transform, m_target);
     }
 
-    //  Arbitrary method.. :(
-    /*
+    /// <returns>The desired position of the camera.</returns>
     private Vector3 GetDesiredPosition()
     {
-        /// Let's imagine a sphere around the target we're following, with a radius of the desired distance.
-        /// Ideally, we would want the camera no further, or closer than the surface of this sphere.
-        /// On top of that, the camera should stay on the same level during this translation.
-
         var currentPos = transform.position;
+        var desiredPos = m_target.position + GetDesiredOffset(Vector2.zero);
 
-        //  First, we should have the camera follow the player with a maximum speed.
-        currentPos += Vector3.ClampMagnitude((m_target.position + m_previousOffset) - currentPos, m_maxFollowSpeed * Time.deltaTime);
-
-        //  Then, we will calculate where the camera would fall on the sphere. It is important we do this after having the camera follow the player a bit.
-        var sphereSurfacePos = m_target.position + ((currentPos - new Vector3(m_target.position.x, currentPos.y, m_target.position.z)).normalized * distanceFromTarget);
-
-        //  After that, we 'pull' the camera position toward this sphere.
-        currentPos = Vector3.SmoothDamp(currentPos, sphereSurfacePos, ref m_followVelocity, m_followTime);
-        return currentPos;
-    }
-    */
-
-    #region Converters
-
-
-
-    #endregion
-
-    private Vector3 GetDesiredPosition()
-    {
-        m_dirFromTarget = GetDesiredDirection(Vector2.zero);
-
-        var currentPos = transform.position;
-        var desiredPos = m_target.position + (m_dirFromTarget * distanceFromTarget);
-
-        //currentPos = Vector3.SmoothDamp(currentPos, desiredPos, ref m_followVelocity, m_followTime);
+        currentPos = Vector3.SmoothDamp(currentPos, desiredPos, ref m_followVelocity, m_followTime);
         return desiredPos;
     }
 
-    private float GetHeightFactor()
+    /// <returns>The desired offset from the player.</returns>
+    private Vector3 GetDesiredOffset(Vector2 input)
     {
-        return (transform.position.y - (m_target.position.y - distanceFromTarget)) / (distanceFromTarget * 2);
-    }
+        var offset = m_records.offset;
+        var direction = Vector3.forward;
+        var yAngle = GetYAngle(input.x);
+        var xAngle = GetXAngle(input.y);
 
-    private Vector3 GetDesiredDirection(Vector2 input)
-    {
         ///<returns>The desired Y angle from the target to the camera.</returns>
         float GetYAngle(float input)
         {
@@ -83,14 +55,14 @@ public class Camera : MonoBehaviour
             if (Input.GetKey(KeyCode.RightArrow)) input++;
 
             //  Store the current angle in local variable.
-            var currentDir = new Vector2(m_dirFromTarget.x, m_dirFromTarget.z).normalized;
+            var currentDir = new Vector2(offset.x, offset.z).normalized;
             var currentAngle = Calc.VectorToAngle(currentDir);
 
             //  Apply the manual rotation offset to the current angle.
-            currentAngle = Calc.Scroll(currentAngle, -input * (m_rotationSpeed * Time.deltaTime), 360f);
+            currentAngle = Mathf.Repeat(currentAngle - (input * (m_rotationSpeed * Time.deltaTime)), 360f);
 
             //  If the player's velocity isn't zero, de angle gradually changes to that negative of the player's velocity.
-            if (m_player.velocity != Vector3.zero)
+            if (m_player.horizontalVelocity != Vector2.zero)
             {
                 var targetDir = new Vector2(-m_player.velocity.x, -m_player.velocity.z).normalized;
                 var adjustmentFactor = Calc.Reverse01(Mathf.Abs(Vector2.Dot(currentDir, targetDir)));
@@ -102,42 +74,56 @@ public class Camera : MonoBehaviour
             return currentAngle;
         }
 
-        ///<returns>The desired Z angle from the target to the camera.</returns>
+        ///<returns>The desired X angle from the target to the camera.</returns>
         float GetXAngle(float input)
         {
             if (Input.GetKey(KeyCode.UpArrow)) input++;
             if (Input.GetKey(KeyCode.DownArrow)) input--;
 
-            //  Calculate both the offset from the target, and the offset with zero height difference.
-            var offset = transform.position - m_target.position;
-            var flatOffset = new Vector3(transform.position.x, m_target.position.y, transform.position.z) - m_target.position;
+            //  Calculate both the offset with zero height difference.
+            var flatOffset = new Vector3(offset.x, 0f, offset.z);
 
             //  Store the current angle in local variable.
-            var currentAngle = Vector3.SignedAngle(flatOffset, offset, Vector3.Cross(flatOffset, Vector3.up));
+            var currentAngle = Vector3.SignedAngle(flatOffset, offset, m_records.rightDirection);
 
             //  Apply the manual rotation offset to the current angle.
-            currentAngle = Calc.Scroll(currentAngle, input * (m_rotationSpeed * Time.deltaTime), 360f);
+            currentAngle = currentAngle + (input * (m_rotationSpeed * Time.deltaTime));
+            currentAngle = Mathf.Clamp(currentAngle, -80f, 80f);
             return currentAngle;
         }
 
-        var direction = Vector3.forward;
-        var yAngle = GetYAngle(input.x);
-        var xAngle = GetXAngle(input.y);
-
         Debug.Log($"Current orientation: Horizontal:{yAngle}, Vertical: {xAngle}");
 
+        ///  We apply the Y and X angles to the direction seperately.
+        ///  First, the Y rotation needs to be applied, before we know what the X angle to rotate on will be.
         direction = Quaternion.AngleAxis(yAngle, Vector3.up) * direction;                           //  Rotation Horizontally.
         direction = Quaternion.AngleAxis(xAngle, Vector3.Cross(direction, Vector3.up)) * direction; //  Rotation Vertically.
-        return direction;
+
+        return direction * distanceFromTarget;
     }
 
     private void OnDrawGizmosSelected()
     {
         if (m_target == null) return;
         GizmoTools.DrawSphere(m_target.position, distanceFromTarget, Color.white, 0.5f, true, 0.1f);
-        GizmoTools.DrawCircle(
-            new Vector3(m_target.position.x, transform.position.y, m_target.position.z),
-            distanceFromTarget * Mathf.Sin(GetHeightFactor() * Mathf.PI),
-            Color.white);
+    }
+
+    /// <summary>
+    /// Class containing information about the camera the previous frame.
+    /// </summary>
+    private class CameraRecords
+    {
+        public Vector3 position;
+        public Vector3 offset;
+        public Vector3 upDirection;
+        public Vector3 rightDirection;
+
+        public CameraRecords(Transform camera, Transform target)
+        {
+            position        = camera.position;
+            offset          = camera.position - target.position;
+            upDirection     = camera.up;
+            rightDirection  = camera.right;
+        }
     }
 }

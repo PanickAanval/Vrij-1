@@ -24,14 +24,6 @@ namespace Joeri.Tools
             return current;
         }
 
-        /// <returns>The 'current' float, with 'amount' added to it, but loops around with 'max' as it's max value.</returns>
-        public static float Scroll(float current, float amount, float max)
-        {
-            current += amount;
-            current %= max;
-            return current;
-        }
-
         /// <returns>The passed in 'color', but with the passed in 'opacity'.</returns>
         public static Color SetOpacity(Color color, float opacity)
         {
