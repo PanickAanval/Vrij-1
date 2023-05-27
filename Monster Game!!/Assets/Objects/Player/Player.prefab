@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8186770591459460797}
-  m_Layer: 0
-  m_Name: Chest
+  m_Layer: 3
+  m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 5217814553838843173}
   - component: {fileID: 5217814553838843172}
   - component: {fileID: 5217814553838843171}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 5217814554207312115}
   - component: {fileID: 5217814554207312117}
   - component: {fileID: 5217814554207312116}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Placeholder Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 5217814554882684089}
   - component: {fileID: 8031654231833575590}
   - component: {fileID: 5217814554882684088}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,8 +260,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ef3e150906fb54c9e542b7755afb92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  m_camera: {fileID: 0}
+  m_movement:
+    controller: {fileID: 5217814554882684088}
+    movementLayer:
+      serializedVersion: 2
+      m_Bits: 55
+  m_center: {fileID: 8186770591459460797}
+  m_walking:
+    speed: 10
+    grip: 5
+  m_falling:
+    fallAcceleration: -9.81
+    airSpeed: 10
+    airGrip: 1
 --- !u!143 &5217814554882684088
 CharacterController:
   m_ObjectHideFlags: 0
@@ -292,7 +303,7 @@ GameObject:
   - component: {fileID: 5217814555391126504}
   - component: {fileID: 5217814555391126519}
   - component: {fileID: 5217814555391126518}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hat Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}

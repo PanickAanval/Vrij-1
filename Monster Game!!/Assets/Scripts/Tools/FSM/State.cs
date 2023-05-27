@@ -14,6 +14,9 @@ namespace Joeri.Tools
         /// </summary>
         protected FSM<Root> parent { get; private set; }
 
+        /// <summary>
+        /// The root class that the state machine is harbored in.
+        /// </summary>
         protected Root root { get => parent.root; }
 
         /// <summary>

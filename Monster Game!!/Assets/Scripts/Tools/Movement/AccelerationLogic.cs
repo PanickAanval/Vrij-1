@@ -13,7 +13,7 @@ public class AccelerationLogic : MonoBehaviour
         public Vector2 desiredVelocity  = Vector2.zero;
 
         /// <returns>The desired 3D velocity based on the given parameters and current conditions.</returns>
-        public Vector3 Get3DVelocity(Vector2 input, float speed, float grip, float deltaTime)
+        public Vector3 CalculateVelocity3D(Vector2 input, float speed, float grip, float deltaTime)
         {
             var flatVelocity = CalculateVelocity(input, speed, grip, deltaTime);
 
@@ -50,7 +50,7 @@ public class AccelerationLogic : MonoBehaviour
             var desiredRay = Calc.FlatToVector(desiredVelocity);
             var velocityRay = Calc.FlatToVector(velocity);
 
-            GizmoTools.DrawRay(position + velocityRay, desiredRay, steeringColor, opacity);
+            GizmoTools.DrawRay(position, desiredRay, steeringColor, opacity);
             GizmoTools.DrawRay(position, velocityRay, velocityColor, opacity);
         }
     }

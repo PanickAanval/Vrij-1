@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
+using Joeri.Tools;
 
 /// <summary>
 /// Class handling the properties of velocity on a singular axis, only applicable in the air.
@@ -23,14 +25,23 @@ public class UncontrolledAcceleration
     /// <summary>
     /// Iterates the velocity based on the current set properties.
     /// </summary>
-    public void Tick(float deltaTime)
+    public float CalculateVelocity(float deltaTime)
     {
         velocity += acceleration * deltaTime;
         velocity -= drag * deltaTime;
+        return velocity;
     }
 
-    public void AddForce(float force)
+    public void AddVelocity(float velocity)
     {
-        velocity += force;
+        this.velocity += velocity;
+    }
+
+    /// <summary>
+    /// Draws the velocity as a vector in a given direction.
+    /// </summary>
+    public void Draw(Vector3 position, Vector3 direction, Color color, float opacity = 1f)
+    {
+        GizmoTools.DrawRay(position, direction * velocity, color, opacity);
     }
 }

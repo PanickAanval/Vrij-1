@@ -5,43 +5,46 @@ using Joeri.Tools;
 
 public class Camera : MonoBehaviour
 {
-    [SerializeField] private Player m_player = null;
-    [SerializeField] private Transform m_target = null;
     [SerializeField] private float distanceFromTarget = 0f;
     [Space]
     [SerializeField] private float m_followTime = 0.1f;
     [SerializeField] private float m_rotationSpeed = 180f;
     [SerializeField] private float m_adjustmentTime = 3f;
 
-    private Vector3 m_followVelocity = Vector3.zero;
-    private float m_adjustmentVelocity = 0f;
-
     private CameraRecords m_records = null;
 
-    private void Start()
+    private Vector3 m_followVelocity = Vector3.zero;
+    private Vector2 m_lastPositivePlayerVelocity = Vector2.zero;
+    private float m_adjustmentVelocity = 0f;
+
+
+    private Transform m_target = null;
+
+    public void Setup(Transform target)
     {
-        m_records = new CameraRecords(transform, m_target);
+        m_records = new CameraRecords(transform, target);
+        m_target = target;
     }
 
-    private void Update()
+    public void Tick(Vector2 input, Vector2 playerVel, float deltaTime)
     {
-        transform.position = GetDesiredPosition();
+        transform.position = GetDesiredPosition(input, playerVel, deltaTime);
         transform.rotation = Quaternion.LookRotation(m_target.position - transform.position, Vector3.up);
-        m_records = new CameraRecords(transform, m_target);
+        m_records.Update(transform, m_target);
     }
 
     /// <returns>The desired position of the camera.</returns>
-    private Vector3 GetDesiredPosition()
+    private Vector3 GetDesiredPosition(Vector2 input, Vector2 playerVel, float deltaTime)
     {
         var currentPos = transform.position;
-        var desiredPos = m_target.position + GetDesiredOffset(Vector2.zero);
+        var desiredPos = m_target.position + GetDesiredOffset(input, playerVel, deltaTime);
 
         currentPos = Vector3.SmoothDamp(currentPos, desiredPos, ref m_followVelocity, m_followTime);
         return desiredPos;
     }
 
     /// <returns>The desired offset from the player.</returns>
-    private Vector3 GetDesiredOffset(Vector2 input)
+    private Vector3 GetDesiredOffset(Vector2 input, Vector2 playerVel, float deltaTime)
     {
         var offset = m_records.offset;
         var direction = Vector3.forward;
@@ -49,37 +52,31 @@ public class Camera : MonoBehaviour
         var xAngle = GetXAngle(input.y);
 
         ///<returns>The desired Y angle from the target to the camera.</returns>
-        float GetYAngle(float input)
+        float GetYAngle(float xInput)
         {
-            if (Input.GetKey(KeyCode.LeftArrow)) input--;
-            if (Input.GetKey(KeyCode.RightArrow)) input++;
-
             //  Store the current angle in local variable.
             var currentDir = new Vector2(offset.x, offset.z).normalized;
             var currentAngle = Calc.VectorToAngle(currentDir);
 
             //  Apply the manual rotation offset to the current angle.
-            currentAngle = Mathf.Repeat(currentAngle - (input * (m_rotationSpeed * Time.deltaTime)), 360f);
+            currentAngle = Mathf.Repeat(currentAngle - (xInput * (m_rotationSpeed * deltaTime)), 360f);
 
             //  If the player's velocity isn't zero, de angle gradually changes to that negative of the player's velocity.
-            if (m_player.horizontalVelocity != Vector2.zero)
-            {
-                var targetDir = new Vector2(-m_player.velocity.x, -m_player.velocity.z).normalized;
-                var adjustmentFactor = Calc.Reverse01(Mathf.Abs(Vector2.Dot(currentDir, targetDir)));
-                var desiredAngle = Calc.VectorToAngle(targetDir);
+            if (playerVel != Vector2.zero) m_lastPositivePlayerVelocity = playerVel;
 
-                desiredAngle = Mathf.LerpAngle(currentAngle, desiredAngle, adjustmentFactor);
-                currentAngle = Mathf.SmoothDampAngle(currentAngle, desiredAngle, ref m_adjustmentVelocity, m_adjustmentTime);
-            }
+            var targetDir = new Vector2(-m_lastPositivePlayerVelocity.x, -m_lastPositivePlayerVelocity.y).normalized;
+            var adjustmentFactor = Calc.Reverse01(Mathf.Abs(Vector2.Dot(currentDir, targetDir)));
+            var desiredAngle = Calc.VectorToAngle(targetDir);
+
+            desiredAngle = Mathf.LerpAngle(currentAngle, desiredAngle, adjustmentFactor);
+            currentAngle = Mathf.SmoothDampAngle(currentAngle, desiredAngle, ref m_adjustmentVelocity, m_adjustmentTime);
+
             return currentAngle;
         }
 
         ///<returns>The desired X angle from the target to the camera.</returns>
-        float GetXAngle(float input)
+        float GetXAngle(float yInput)
         {
-            if (Input.GetKey(KeyCode.UpArrow)) input++;
-            if (Input.GetKey(KeyCode.DownArrow)) input--;
-
             //  Calculate both the offset with zero height difference.
             var flatOffset = new Vector3(offset.x, 0f, offset.z);
 
@@ -87,7 +84,7 @@ public class Camera : MonoBehaviour
             var currentAngle = Vector3.SignedAngle(flatOffset, offset, m_records.rightDirection);
 
             //  Apply the manual rotation offset to the current angle.
-            currentAngle = currentAngle + (input * (m_rotationSpeed * Time.deltaTime));
+            currentAngle = currentAngle + (yInput * (m_rotationSpeed * deltaTime));
             currentAngle = Mathf.Clamp(currentAngle, -80f, 80f);
             return currentAngle;
         }
@@ -102,7 +99,7 @@ public class Camera : MonoBehaviour
         return direction * distanceFromTarget;
     }
 
-    private void OnDrawGizmosSelected()
+    public void DrawGizmos()
     {
         if (m_target == null) return;
         GizmoTools.DrawSphere(m_target.position, distanceFromTarget, Color.white, 0.5f, true, 0.1f);
@@ -117,13 +114,19 @@ public class Camera : MonoBehaviour
         public Vector3 offset;
         public Vector3 upDirection;
         public Vector3 rightDirection;
+        public Vector3 playerVelocity;
 
         public CameraRecords(Transform camera, Transform target)
         {
-            position        = camera.position;
-            offset          = camera.position - target.position;
-            upDirection     = camera.up;
-            rightDirection  = camera.right;
+            Update(camera, target);
+        }
+
+        public void Update(Transform camera, Transform target)
+        {
+            position = camera.position;
+            offset = camera.position - target.position;
+            upDirection = camera.up;
+            rightDirection = camera.right;
         }
     }
 }
