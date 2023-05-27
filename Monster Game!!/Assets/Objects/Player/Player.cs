@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Joeri.Tools;
-public class Player : MonoBehaviour
+public partial class Player : MonoBehaviour
 {
     public float speed;
     public float grip;
     public Transform m_camera = null;
 
-    private AccelerationLogic.Flat m_acceleration = new AccelerationLogic.Flat();
 
     public Vector3 velocity { get => Calc.FlatToVector(m_acceleration.velocity); }
     public Vector2 horizontalVelocity { get => m_acceleration.velocity; }
