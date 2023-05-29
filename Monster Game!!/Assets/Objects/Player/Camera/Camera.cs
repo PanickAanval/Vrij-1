@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Joeri.Tools;
+using Joeri.Tools.Utilities;
+using Joeri.Tools.Debugging;
 
 public class Camera : MonoBehaviour
 {
@@ -56,7 +57,7 @@ public class Camera : MonoBehaviour
         {
             //  Store the current angle in local variable.
             var currentDir = new Vector2(offset.x, offset.z).normalized;
-            var currentAngle = Calc.VectorToAngle(currentDir);
+            var currentAngle = Vectors.VectorToAngle(currentDir);
 
             //  Apply the manual rotation offset to the current angle.
             currentAngle = Mathf.Repeat(currentAngle - (xInput * (m_rotationSpeed * deltaTime)), 360f);
@@ -65,8 +66,8 @@ public class Camera : MonoBehaviour
             if (playerVel != Vector2.zero) m_lastPositivePlayerVelocity = playerVel;
 
             var targetDir = new Vector2(-m_lastPositivePlayerVelocity.x, -m_lastPositivePlayerVelocity.y).normalized;
-            var adjustmentFactor = Calc.Reverse01(Mathf.Abs(Vector2.Dot(currentDir, targetDir)));
-            var desiredAngle = Calc.VectorToAngle(targetDir);
+            var adjustmentFactor = Util.Reverse01(Mathf.Abs(Vector2.Dot(currentDir, targetDir)));
+            var desiredAngle = Vectors.VectorToAngle(targetDir);
 
             desiredAngle = Mathf.LerpAngle(currentAngle, desiredAngle, adjustmentFactor);
             currentAngle = Mathf.SmoothDampAngle(currentAngle, desiredAngle, ref m_adjustmentVelocity, m_adjustmentTime);

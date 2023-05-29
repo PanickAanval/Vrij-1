@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using Joeri.Tools;
+using Joeri.Tools.Movement;
+using Joeri.Tools.Debugging;
 
 public partial class Player
 {
@@ -14,12 +15,12 @@ public partial class Player
         public CharacterController controller = null;
         public LayerMask movementLayer;
 
-        private AccelerationLogic.Flat m_horizontal = new AccelerationLogic.Flat();
-        private UncontrolledAcceleration m_vertical = new UncontrolledAcceleration(0f, 0f, 0f);
+        private Accel.Flat m_horizontal = new Accel.Flat();
+        private Accel.Uncontrolled m_vertical = new Accel.Uncontrolled(0f, 0f, 0f);
 
         #region Properties
 
-        public UncontrolledAcceleration vertical { get => m_vertical; }
+        public Accel.Uncontrolled vertical { get => m_vertical; }
 
         public Vector3 velocity { get => new Vector3(m_horizontal.velocity.x, m_vertical.velocity, m_horizontal.velocity.y); }
         public Vector2 horizontalVelocity { get => m_horizontal.velocity; }

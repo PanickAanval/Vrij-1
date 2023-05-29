@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Joeri.Tools
+namespace Joeri.Tools.ObjectPool
 {
     public class ObjectPool<T> where T : MonoBehaviour
     {
@@ -18,6 +18,13 @@ namespace Joeri.Tools
 
         public List<T> activeItems { get => m_activeItems; }
 
+        /// <summary>
+        /// Create a new object pool.
+        /// </summary>
+        /// <param name="itemToSpawn">The game object which will be stored in the pool.</param>
+        /// <param name="groupSize">The amount of items which will be stored in the pool, and will be the amount to increment with.</param>
+        /// <param name="autoGrow">Whether the pool should grow when the available items run out.</param>
+        /// <param name="root">The transform in which the inactive objects will be stored.</param>
         public ObjectPool(GameObject itemToSpawn, int groupSize, bool autoGrow, Transform root)
         {
             //  Setting variables.

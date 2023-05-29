@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Joeri.Tools.Debugging;
 
 namespace Joeri.Tools
 {

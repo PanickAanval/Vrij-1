@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using Joeri.Tools.Utilities;
+using Joeri.Tools.Debugging;
 
 namespace Joeri.Tools
 {
@@ -12,7 +14,7 @@ namespace Joeri.Tools
         /// </summary>
         public Clock(Vector3 position, float radius, float handAngle)
         {
-            var handDirection = Calc.AngleToVector(handAngle);
+            var handDirection = Vectors.AngleToVector(handAngle);
 
             //  Using the Pointer struct for the clock handle.
             pointer = new Pointer(position, new Vector3(position.x + handDirection.x, position.y, position.z + handDirection.y), radius);

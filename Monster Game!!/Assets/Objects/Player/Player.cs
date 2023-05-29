@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Joeri.Tools;
+using Joeri.Tools.Structure;
+using Joeri.Tools.Utilities;
+
 public partial class Player : MonoBehaviour
 {
     [SerializeField] private Movement m_movement;
@@ -33,7 +35,7 @@ public partial class Player : MonoBehaviour
     {
         //  We rotate the input vector by the angle of the camera, so that the player moves forward in relation to the camera at all times.
         //  For now, the angle by which we rotate is negative. I have yet to find out why it rotates the wrong way.
-        m_input = Calc.RotateVector2(input, cameraAngle);
+        m_input = Vectors.RotateVector2(input, cameraAngle);
         m_stateMachine.Tick(deltaTime);
     }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Joeri.Tools
+namespace Joeri.Tools.Structure
 {
     /// <summary>
     /// Abstract base for a state within a state machine.

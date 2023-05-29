@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Joeri.Tools
+namespace Joeri.Tools.Debugging
 {
     public static class GizmoTools
     {

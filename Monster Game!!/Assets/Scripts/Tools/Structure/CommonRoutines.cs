@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Joeri.Tools
+namespace Joeri.Tools.Structure
 {
     public static class CommonRoutines
     {

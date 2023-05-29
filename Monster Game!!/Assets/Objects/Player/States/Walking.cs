@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using Joeri.Tools;
+using Joeri.Tools.Structure;
 
 partial class Player
 {
