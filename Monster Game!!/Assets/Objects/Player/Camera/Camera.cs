@@ -6,18 +6,19 @@ using Joeri.Tools.Debugging;
 
 public class Camera : MonoBehaviour
 {
+    [Header("General:")]
     [SerializeField] private float distanceFromTarget = 0f;
-    [Space]
     [SerializeField] private float m_followTime = 0.1f;
     [SerializeField] private float m_rotationSpeed = 180f;
+    
+    [Header("Direction Adjustment:")]
     [SerializeField] private float m_adjustmentTime = 3f;
 
     private CameraRecords m_records = null;
 
     private Vector3 m_followVelocity = Vector3.zero;
-    private Vector2 m_lastPositivePlayerVelocity = Vector2.zero;
+    private Vector2 m_desiredLookDir = Vector2.zero;
     private float m_adjustmentVelocity = 0f;
-
 
     private Transform m_target = null;
 
@@ -25,6 +26,8 @@ public class Camera : MonoBehaviour
     {
         m_records = new CameraRecords(transform, target);
         m_target = target;
+
+        SetDesiredDir(Vectors.VectorToFlat(m_records.offset));
     }
 
     public void Tick(Vector2 input, Vector2 playerVel, float deltaTime)
@@ -62,12 +65,11 @@ public class Camera : MonoBehaviour
             //  Apply the manual rotation offset to the current angle.
             currentAngle = Mathf.Repeat(currentAngle - (xInput * (m_rotationSpeed * deltaTime)), 360f);
 
-            //  If the player's velocity isn't zero, de angle gradually changes to that negative of the player's velocity.
-            if (playerVel != Vector2.zero) m_lastPositivePlayerVelocity = playerVel;
+            //  Save the player's last recorded horizontal velocity.
+            if (playerVel != Vector2.zero) SetDesiredDir(-playerVel);
 
-            var targetDir = new Vector2(-m_lastPositivePlayerVelocity.x, -m_lastPositivePlayerVelocity.y).normalized;
-            var adjustmentFactor = Util.Reverse01(Mathf.Abs(Vector2.Dot(currentDir, targetDir)));
-            var desiredAngle = Vectors.VectorToAngle(targetDir);
+            var adjustmentFactor = Util.Reverse01(Mathf.Abs(Vector2.Dot(currentDir, m_desiredLookDir)));
+            var desiredAngle = Vectors.VectorToAngle(m_desiredLookDir);
 
             desiredAngle = Mathf.LerpAngle(currentAngle, desiredAngle, adjustmentFactor);
             currentAngle = Mathf.SmoothDampAngle(currentAngle, desiredAngle, ref m_adjustmentVelocity, m_adjustmentTime);
@@ -90,6 +92,8 @@ public class Camera : MonoBehaviour
             return currentAngle;
         }
 
+        
+
         Debug.Log($"Current orientation: Horizontal:{yAngle}, Vertical: {xAngle}");
 
         ///  We apply the Y and X angles to the direction seperately.
@@ -98,6 +102,14 @@ public class Camera : MonoBehaviour
         direction = Quaternion.AngleAxis(xAngle, Vector3.Cross(direction, Vector3.up)) * direction; //  Rotation Vertically.
 
         return direction * distanceFromTarget;
+    }
+
+    ///<summary>
+    ///Updates the desired direction variable.
+    ///</summary>
+    void SetDesiredDir(Vector2 vector)
+    {
+        m_desiredLookDir = vector.normalized;
     }
 
     public void DrawGizmos()
