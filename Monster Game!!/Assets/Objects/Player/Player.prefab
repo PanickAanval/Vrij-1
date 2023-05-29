@@ -273,6 +273,11 @@ MonoBehaviour:
     fallAcceleration: -9.81
     airSpeed: 10
     airGrip: 1
+  m_jumping:
+    jumpForce: 5
+    fallAcceleration: -9.81
+    airSpeed: 10
+    airGrip: 1
 --- !u!143 &5217814554882684088
 CharacterController:
   m_ObjectHideFlags: 0

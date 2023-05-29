@@ -13,6 +13,7 @@ public partial class Player : MonoBehaviour
     [Header("States:")]
     [SerializeField] private Walking.Settings m_walking;
     [SerializeField] private Falling.Settings m_falling;
+    [SerializeField] private Jumping.Settings m_jumping;
 
     private FSM<Player> m_stateMachine = null;
     private Vector2 m_input;
@@ -28,7 +29,7 @@ public partial class Player : MonoBehaviour
 
     public void Setup()
     {
-        m_stateMachine = new FSM<Player>(this, typeof(Walking), new Walking(m_walking), new Falling(m_falling));
+        m_stateMachine = new FSM<Player>(this, typeof(Walking), new Walking(m_walking), new Falling(m_falling), new Jumping(m_jumping));
     }
 
     public void Tick(Vector2 input, float deltaTime, float cameraAngle)

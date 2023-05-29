@@ -20,17 +20,15 @@ partial class Player
         public override void OnEnter()
         {
             root.m_movement.vertical.acceleration = 0f;
+            root.m_movement.vertical.velocity = 0f;
         }
 
         public override void OnTick(float deltaTime)
         {
-            root.m_movement.Tick(root.m_input, m_settings.speed, m_settings.grip, Time.deltaTime);
+            root.m_movement.Tick(root.m_input, m_settings.speed, m_settings.grip, deltaTime);
 
-            if (!root.m_movement.onGround)
-            {
-                SwitchToState<Falling>();
-                return;
-            }
+            if (!root.m_movement.onGround) { SwitchToState<Falling>(); return; }
+            if (Input.GetKeyDown(KeyCode.Space)) { SwitchToState<Jumping>(); return; }
         }
 
         [System.Serializable]
