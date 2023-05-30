@@ -50,7 +50,7 @@ MonoBehaviour:
   distanceFromTarget: 3
   m_followTime: 0.025
   m_rotationSpeed: 180
-  m_adjustmentTime: 1
+  m_adjustmentTime: 0.25
 --- !u!20 &3229365700705102628
 Camera:
   m_ObjectHideFlags: 0
