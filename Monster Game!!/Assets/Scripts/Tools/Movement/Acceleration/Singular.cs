@@ -11,10 +11,8 @@ namespace Joeri.Tools.Movement
             public float desiredVelocity = 0f;
 
             /// <returns>The desired velocity based on the given parameters and current conditions.</returns>
-            public float CalculateVelocity(float input, float speed, float grip, float deltaTime)
+            public float CalculateVelocity(float desiredVelocity, float grip, float deltaTime)
             {
-                desiredVelocity = Mathf.Clamp(input, -1f, 1f) * speed;
-
                 //  Calculating steering.
                 var steering = desiredVelocity - velocity;
                 steering *= Mathf.Clamp01(grip * deltaTime);
@@ -30,6 +28,14 @@ namespace Joeri.Tools.Movement
 
                 //  Returning velocity.
                 return velocity;
+            }
+
+            /// <summary>
+            /// Overload for CalculateVelocity(...) in which both input and speed are seperate parameters.
+            /// </summary>
+            public float CalculateVelocity(float input, float speed, float grip, float deltaTime)
+            {
+                return CalculateVelocity(Mathf.Clamp(input, -1f, 1f) * speed, grip, deltaTime);
             }
 
             /// <summary>

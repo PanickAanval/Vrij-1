@@ -261,23 +261,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_movement:
+    m_gravity: -9.81
     controller: {fileID: 5217814554882684088}
     movementLayer:
       serializedVersion: 2
       m_Bits: 55
-  m_center: {fileID: 8186770591459460797}
-  m_walking:
     speed: 10
     grip: 5
+  m_center: {fileID: 8186770591459460797}
   m_falling:
-    fallAcceleration: -9.81
-    airSpeed: 10
-    airGrip: 1
+    gripMultiplier: 0.2
   m_jumping:
     jumpForce: 5
-    fallAcceleration: -9.81
-    airSpeed: 10
-    airGrip: 1
+    gripMultiplier: 0.2
 --- !u!143 &5217814554882684088
 CharacterController:
   m_ObjectHideFlags: 0

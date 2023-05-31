@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Joeri.Tools.Movement;
 using Joeri.Tools.Structure;
 using Joeri.Tools.Utilities;
 
 public partial class Player : MonoBehaviour
 {
-    [SerializeField] private Movement m_movement;
+    [SerializeField] private PlayerController m_movement;
     [Space]
     [SerializeField] private Transform m_center;
 
     [Header("States:")]
-    [SerializeField] private Walking.Settings m_walking;
     [SerializeField] private Falling.Settings m_falling;
     [SerializeField] private Jumping.Settings m_jumping;
 
@@ -29,7 +29,7 @@ public partial class Player : MonoBehaviour
 
     public void Setup()
     {
-        m_stateMachine = new FSM<Player>(this, typeof(Walking), new Walking(m_walking), new Falling(m_falling), new Jumping(m_jumping));
+        m_stateMachine = new FSM<Player>(this, typeof(Walking), new Walking(), new Falling(m_falling), new Jumping(m_jumping));
     }
 
     public void Tick(Vector2 input, float deltaTime, float cameraAngle)

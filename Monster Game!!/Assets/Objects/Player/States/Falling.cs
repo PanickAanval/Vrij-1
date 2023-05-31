@@ -5,36 +5,43 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Joeri.Tools.Structure;
+using Joeri.Tools;
 
 partial class Player
 {
     public class Falling : State<Player>
     {
-        private Settings m_settings = null;
+        private Swapper<float> m_gripSwapper;
 
-        public Falling(Settings settings)
-        {
-            m_settings = settings;
-        }
+        public Settings settings { get => m_settings as Settings; }
+
+        public Falling(Settings settings) : base(settings) { }
 
         public override void OnEnter()
         {
-            root.m_movement.vertical.acceleration = m_settings.fallAcceleration;
+            m_gripSwapper = new Swapper<float>(root.m_movement.grip * settings.gripMultiplier);
+            m_gripSwapper.Swap(ref root.m_movement.grip);
+
+            root.m_movement.SetGravityState(true);
         }
 
         public override void OnTick(float deltaTime)
         {
-            root.m_movement.Tick(root.m_input, m_settings.airSpeed, m_settings.airGrip, deltaTime);
+            root.m_movement.ApplyInput(root.m_input, deltaTime);
 
             if (root.m_movement.onGround) { SwitchToState<Walking>(); return; }
         }
 
-        [System.Serializable]
-        public class Settings
+        public override void OnExit()
         {
-            public float fallAcceleration;
-            public float airSpeed;
-            public float airGrip;
+            m_gripSwapper.Swap(ref root.m_movement.grip);
+            m_gripSwapper = null;
+        }
+
+        [System.Serializable]
+        public class Settings : ISettings
+        {
+            public float gripMultiplier;
         }
     }
 }

@@ -15,9 +15,30 @@ namespace Joeri.Tools.Structure
         protected FSM<Root> parent { get; private set; }
 
         /// <summary>
+        /// The settings of the state, as an abstract settings interface.
+        /// </summary>
+        protected ISettings m_settings { get; private set; }
+
+        /// <summary>
         /// The root class that the state machine is harbored in.
         /// </summary>
         protected Root root { get => parent.root; }
+
+        /// <summary>
+        /// Create a new state, and pass in the state's settings.
+        /// </summary>
+        public State(ISettings settings)
+        {
+            m_settings = settings;
+        }
+
+        /// <summary>
+        /// Create a new state, without any required settings.
+        /// </summary>
+        public State()
+        {
+            m_settings = null;
+        }
 
         /// <summary>
         /// Called whenever the finite state machine the state is in, is created.
@@ -66,5 +87,10 @@ namespace Joeri.Tools.Structure
         /// Functions for drawing gizmos of the state.
         /// </summary>
         public virtual void OnDrawGizmos() { }
+
+        /// <summary>
+        /// Abstract interface representing any settings the state might have.
+        /// </summary>
+        public interface ISettings { }
     }
 }

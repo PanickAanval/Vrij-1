@@ -10,32 +10,18 @@ partial class Player
 {
     public class Walking : State<Player>
     {
-        private Settings m_settings = null;
-
-        public Walking(Settings settings)
-        {
-            m_settings = settings;
-        }
-
         public override void OnEnter()
         {
-            root.m_movement.vertical.acceleration = 0f;
+            root.m_movement.SetGravityState(false);
             root.m_movement.vertical.velocity = 0f;
         }
 
         public override void OnTick(float deltaTime)
         {
-            root.m_movement.Tick(root.m_input, m_settings.speed, m_settings.grip, deltaTime);
+            root.m_movement.ApplyInput(root.m_input, deltaTime);
 
             if (!root.m_movement.onGround) { SwitchToState<Falling>(); return; }
             if (Input.GetKeyDown(KeyCode.Space)) { SwitchToState<Jumping>(); return; }
-        }
-
-        [System.Serializable]
-        public class Settings
-        {
-            public float speed;
-            public float grip;
         }
     }
 }

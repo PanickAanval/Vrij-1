@@ -11,19 +11,9 @@ namespace Joeri.Tools.Movement
             public Vector2 velocity = Vector2.zero;
             public Vector2 desiredVelocity = Vector2.zero;
 
-            /// <returns>The desired 3D velocity based on the given parameters and current conditions.</returns>
-            public Vector3 CalculateVelocity3D(Vector2 input, float speed, float grip, float deltaTime)
-            {
-                var flatVelocity = CalculateVelocity(input, speed, grip, deltaTime);
-
-                return new Vector3(flatVelocity.x, 0f, flatVelocity.y);
-            }
-
             /// <returns>The desired velocity based on the given parameters and current conditions.</returns>
-            public Vector2 CalculateVelocity(Vector2 input, float speed, float grip, float deltaTime)
+            public Vector2 CalculateVelocity(Vector2 desiredVelocity, float grip, float deltaTime)
             {
-                desiredVelocity = Vector2.ClampMagnitude(input, 1f) * speed;
-
                 //  Calculating steering.
                 var steering = desiredVelocity - velocity;
                 steering *= Mathf.Clamp01(grip * deltaTime);
@@ -39,6 +29,14 @@ namespace Joeri.Tools.Movement
 
                 //  Returning velocity.
                 return velocity;
+            }
+
+            /// <summary>
+            /// Overload for CalculateVelocity(...) in which both input and speed are seperate parameters.
+            /// </summary>
+            public Vector2 CalculateVelocity(Vector2 input, float speed, float grip, float deltaTime)
+            {
+                return CalculateVelocity(Vector2.ClampMagnitude(input, 1f) * speed, grip, deltaTime);
             }
 
             /// <summary>

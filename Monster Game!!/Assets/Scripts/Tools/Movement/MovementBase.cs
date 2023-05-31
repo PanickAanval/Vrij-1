@@ -4,43 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using Joeri.Tools.Movement;
 using Joeri.Tools.Debugging;
 
-public partial class Player
+namespace Joeri.Tools.Movement
 {
-    [System.Serializable]
-    public class Movement
+    public abstract class MovementBase
     {
+        [SerializeField] private float m_gravity = -9.81f;
+        [Space]
         public CharacterController controller = null;
         public LayerMask movementLayer;
 
-        private Accel.Flat m_horizontal = new Accel.Flat();
-        private Accel.Uncontrolled m_vertical = new Accel.Uncontrolled(0f, 0f, 0f);
+        protected Accel.Flat m_horizontal = new Accel.Flat();
+        protected Accel.Uncontrolled m_vertical = new Accel.Uncontrolled(0f, 0f, 0f);
 
         #region Properties
 
-        public Accel.Uncontrolled vertical { get => m_vertical; }
-
         public Vector3 velocity { get => new Vector3(m_horizontal.velocity.x, m_vertical.velocity, m_horizontal.velocity.y); }
         public Vector2 horizontalVelocity { get => m_horizontal.velocity; }
-        public bool onGround { get; private set; }
+        public bool onGround { get; protected set; }
 
-        private Vector3 groundCheckOrigin { get => controller.transform.position + (Vector3.up * (controller.radius - controller.skinWidth * 2)); }
+        public Accel.Flat horizontal { get => m_horizontal; }
+        public Accel.Uncontrolled vertical { get => m_vertical; }
+
+        protected Vector3 groundCheckOrigin { get => controller.transform.position + (Vector3.up * (controller.radius - controller.skinWidth * 2)); }
 
         #endregion
 
-        public void Tick(Vector2 input, float speed, float grip, float deltaTime)
-        {
-            var velocity = m_horizontal.CalculateVelocity3D(input, speed, grip, deltaTime);
-
-            controller.transform.rotation = Quaternion.LookRotation(velocity);
-
-            velocity.y = m_vertical.CalculateVelocity(deltaTime);
-            controller.Move(velocity * deltaTime);
-            onGround = isOnGround();
-        }
-
+        /// <returns>True if the player is standing on valid ground. Calculated by a Physics.OverlapSphere(...).</returns>
         public bool isOnGround()
         {
             if (controller == null) return false;
@@ -51,6 +42,9 @@ public partial class Player
             return false;
         }
 
+        /// <summary>
+        /// Draws the functionality of the movement class as shapes in 3D space. Representing their values and states.
+        /// </summary>
         public void DrawGizmos()
         {
             void DrawGroundCheck(bool onGround)
@@ -69,7 +63,15 @@ public partial class Player
                 if (controller == null) return;
                 DrawGroundCheck(isOnGround());
             }
+        }
 
+        /// <summary>
+        /// Sets the gravity state of the movement class to the desired state.
+        /// </summary>
+        public void SetGravityState(bool enabled)
+        {
+            if (enabled)    m_vertical.acceleration = m_gravity;
+            else            m_vertical.acceleration = 0f;
         }
     }
 }
