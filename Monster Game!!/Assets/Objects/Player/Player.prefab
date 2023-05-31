@@ -266,8 +266,8 @@ MonoBehaviour:
     movementLayer:
       serializedVersion: 2
       m_Bits: 55
-    speed: 10
-    grip: 5
+    speed: 8
+    grip: 8
   m_center: {fileID: 8186770591459460797}
   m_falling:
     gripMultiplier: 0.2
