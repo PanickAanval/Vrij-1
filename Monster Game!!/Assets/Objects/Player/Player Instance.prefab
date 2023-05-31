@@ -68,12 +68,12 @@ PrefabInstance:
     - target: {fileID: 3229365700705102631, guid: 4e30a6b3bfb954242a74aef5bb383f57,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.95
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3229365700705102631, guid: 4e30a6b3bfb954242a74aef5bb383f57,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.06
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 3229365700705102631, guid: 4e30a6b3bfb954242a74aef5bb383f57,
         type: 3}
@@ -115,21 +115,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Camera
       objectReference: {fileID: 0}
-    - target: {fileID: 5536593996665751944, guid: 4e30a6b3bfb954242a74aef5bb383f57,
-        type: 3}
-      propertyPath: m_player
-      value: 
-      objectReference: {fileID: 2203602884976540035}
-    - target: {fileID: 5536593996665751944, guid: 4e30a6b3bfb954242a74aef5bb383f57,
-        type: 3}
-      propertyPath: m_target
-      value: 
-      objectReference: {fileID: 35940441886506904}
-    - target: {fileID: 5536593996665751944, guid: 4e30a6b3bfb954242a74aef5bb383f57,
-        type: 3}
-      propertyPath: m_tracking
-      value: 
-      objectReference: {fileID: 35940441886506904}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e30a6b3bfb954242a74aef5bb383f57, type: 3}
 --- !u!114 &4410995706864518293 stripped
@@ -219,12 +204,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7bd2cb16565da644e873c75a7a4be9d8, type: 3}
---- !u!4 &35940441886506904 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8186770591459460797, guid: 7bd2cb16565da644e873c75a7a4be9d8,
-    type: 3}
-  m_PrefabInstance: {fileID: 8206385209767721253}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2203602884976540035 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8031654231833575590, guid: 7bd2cb16565da644e873c75a7a4be9d8,

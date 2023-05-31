@@ -1,22 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Joeri.Tools;
 using Joeri.Tools.Utilities;
 using Joeri.Tools.Debugging;
 
 public class Camera : MonoBehaviour
 {
     [Header("General:")]
-    [SerializeField] private float distanceFromTarget = 0f;
     [SerializeField] private float m_followTime = 0.1f;
     [SerializeField] private float m_rotationSpeed = 180f;
     
     [Header("Direction Adjustment:")]
+    [SerializeField] private float m_referenceSpeed = 3f;
     [SerializeField] private float m_adjustmentTime = 3f;
 
     private CameraRecords m_records = null;
 
+    private float m_distanceFromTarget = 0f;
     private Vector3 m_followVelocity = Vector3.zero;
+
     private Vector2 m_desiredLookDir = Vector2.zero;
     private float m_adjustmentVelocity = 0f;
 
@@ -25,8 +28,8 @@ public class Camera : MonoBehaviour
     public void Setup(Transform target)
     {
         m_records = new CameraRecords(transform, target);
+        m_distanceFromTarget = m_records.offset.magnitude;
         m_target = target;
-
         SetDesiredDir(Vectors.VectorToFlat(m_records.offset));
     }
 
@@ -50,10 +53,17 @@ public class Camera : MonoBehaviour
     /// <returns>The desired offset from the player.</returns>
     private Vector3 GetDesiredOffset(Vector2 input, Vector2 playerVel, float deltaTime)
     {
+        if (playerVel != Vector2.zero)
+        {
+            SetDesiredDir(-playerVel);                  //  Save the player's last recorded horizontal velocity.
+        }
+
+
         var offset = m_records.offset;
         var direction = Vector3.forward;
         var yAngle = GetYAngle(input.x);
         var xAngle = GetXAngle(input.y);
+
 
         ///<returns>The desired Y angle from the target to the camera.</returns>
         float GetYAngle(float xInput)
@@ -65,13 +75,11 @@ public class Camera : MonoBehaviour
             //  Apply the manual rotation offset to the current angle.
             currentAngle = Mathf.Repeat(currentAngle - (xInput * (m_rotationSpeed * deltaTime)), 360f);
 
-            //  Save the player's last recorded horizontal velocity.
-            if (playerVel != Vector2.zero) SetDesiredDir(-playerVel);
+            //  Apply adjustment.
+            var adjustmentFactor = Mathf.Clamp01(Vector2.Dot(currentDir, m_desiredLookDir) + 1);
+            if (m_referenceSpeed > 0) adjustmentFactor *= Mathf.Clamp01(playerVel.magnitude / m_referenceSpeed);
 
-            var adjustmentFactor = Util.Reverse01(Mathf.Abs(Vector2.Dot(currentDir, m_desiredLookDir)));
-            var desiredAngle = Vectors.VectorToAngle(m_desiredLookDir);
-
-            desiredAngle = Mathf.LerpAngle(currentAngle, desiredAngle, adjustmentFactor);
+            var desiredAngle = Mathf.LerpAngle(currentAngle, Vectors.VectorToAngle(m_desiredLookDir), adjustmentFactor);
             currentAngle = Mathf.SmoothDampAngle(currentAngle, desiredAngle, ref m_adjustmentVelocity, m_adjustmentTime);
 
             return currentAngle;
@@ -92,8 +100,6 @@ public class Camera : MonoBehaviour
             return currentAngle;
         }
 
-        
-
         Debug.Log($"Current orientation: Horizontal:{yAngle}, Vertical: {xAngle}");
 
         ///  We apply the Y and X angles to the direction seperately.
@@ -101,7 +107,7 @@ public class Camera : MonoBehaviour
         direction = Quaternion.AngleAxis(yAngle, Vector3.up) * direction;                           //  Rotation Horizontally.
         direction = Quaternion.AngleAxis(xAngle, Vector3.Cross(direction, Vector3.up)) * direction; //  Rotation Vertically.
 
-        return direction * distanceFromTarget;
+        return direction * m_distanceFromTarget;
     }
 
     ///<summary>
@@ -115,7 +121,7 @@ public class Camera : MonoBehaviour
     public void DrawGizmos()
     {
         if (m_target == null) return;
-        GizmoTools.DrawSphere(m_target.position, distanceFromTarget, Color.white, 0.5f, true, 0.1f);
+        GizmoTools.DrawSphere(m_target.position, m_distanceFromTarget, Color.white, 0.5f, true, 0.1f);
     }
 
     /// <summary>

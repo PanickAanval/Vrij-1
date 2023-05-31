@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Joeri.Tools
 {
@@ -11,14 +12,7 @@ namespace Joeri.Tools
         public float time = 0f;
         public float timer = 0f;
 
-        public float percent
-        {
-            get
-            {
-                if (time == 0) return 1f;
-                return timer / time;
-            }
-        }
+        public float percent { get => GetPercent(); }
 
         public Timer(float time)
         {
@@ -27,10 +21,29 @@ namespace Joeri.Tools
 
         public bool HasReached(float deltaTime)
         {
-            timer += deltaTime;
+            Add(deltaTime);
             if (timer < time) return false;
             Reset();
             return true;
+        }
+
+        public float Add(float amount)
+        {
+            timer += amount;
+            if (timer < 0f) timer = 0f;
+            return timer;
+        }
+
+        public float GetPercent(bool clamped = false)
+        {
+            var percent = 1f;
+
+            if (time > 0)
+            {
+                percent = timer / time;
+                if (clamped) percent = Mathf.Clamp01(percent);
+            }
+            return percent;
         }
 
         public void Reset()

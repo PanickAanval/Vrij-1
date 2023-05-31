@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ac080262ceeef14aa2ae97a1a252c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceFromTarget: 3
   m_followTime: 0.025
   m_rotationSpeed: 180
-  m_adjustmentTime: 0.25
+  m_referenceSpeed: 10
+  m_adjustmentTime: 0.5
 --- !u!20 &3229365700705102628
 Camera:
   m_ObjectHideFlags: 0
