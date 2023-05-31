@@ -10,14 +10,14 @@ public class Camera : MonoBehaviour
     [Header("General:")]
     [SerializeField] private float m_followTime = 0.1f;
     [SerializeField] private float m_rotationSpeed = 180f;
-    
+
     [Header("Direction Adjustment:")]
     [SerializeField] private float m_referenceSpeed = 3f;
     [SerializeField] private float m_adjustmentTime = 3f;
 
     private CameraRecords m_records = null;
+    private Orbit m_orbit = new Orbit();
 
-    private float m_distanceFromTarget = 0f;
     private Vector3 m_followVelocity = Vector3.zero;
 
     private Vector2 m_desiredLookDir = Vector2.zero;
@@ -28,8 +28,10 @@ public class Camera : MonoBehaviour
     public void Setup(Transform target)
     {
         m_records = new CameraRecords(transform, target);
-        m_distanceFromTarget = m_records.offset.magnitude;
+        m_orbit.SetOffset(m_records.offset);
+
         m_target = target;
+
         SetDesiredDir(Vectors.VectorToFlat(m_records.offset));
     }
 
@@ -58,56 +60,43 @@ public class Camera : MonoBehaviour
             SetDesiredDir(-playerVel);                  //  Save the player's last recorded horizontal velocity.
         }
 
-
-        var offset = m_records.offset;
-        var direction = Vector3.forward;
         var yAngle = GetYAngle(input.x);
         var xAngle = GetXAngle(input.y);
-
 
         ///<returns>The desired Y angle from the target to the camera.</returns>
         float GetYAngle(float xInput)
         {
-            //  Store the current angle in local variable.
-            var currentDir = new Vector2(offset.x, offset.z).normalized;
-            var currentAngle = Vectors.VectorToAngle(currentDir);
+            var angle = m_orbit.yAngle;
 
             //  Apply the manual rotation offset to the current angle.
-            currentAngle = Mathf.Repeat(currentAngle - (xInput * (m_rotationSpeed * deltaTime)), 360f);
+            angle = Mathf.Repeat(angle - (xInput * (m_rotationSpeed * deltaTime)), 360f);
 
-            //  Apply adjustment.
-            var adjustmentFactor = Mathf.Clamp01(Vector2.Dot(currentDir, m_desiredLookDir) + 1);
+            //  Calculate adjustment factor.
+            var adjustmentFactor = Mathf.Clamp01(Vector2.Dot(Vectors.VectorToFlat(m_orbit.direction), m_desiredLookDir) + 1);
             if (m_referenceSpeed > 0) adjustmentFactor *= Mathf.Clamp01(playerVel.magnitude / m_referenceSpeed);
 
-            var desiredAngle = Mathf.LerpAngle(currentAngle, Vectors.VectorToAngle(m_desiredLookDir), adjustmentFactor);
-            currentAngle = Mathf.SmoothDampAngle(currentAngle, desiredAngle, ref m_adjustmentVelocity, m_adjustmentTime);
+            //  Apply adjustment factor to the rotation.
+            var desiredAngle = Mathf.LerpAngle(angle, Vectors.VectorToAngle(m_desiredLookDir), adjustmentFactor);
+            angle = Mathf.SmoothDampAngle(angle, desiredAngle, ref m_adjustmentVelocity, m_adjustmentTime);
 
-            return currentAngle;
+            return angle;
         }
 
         ///<returns>The desired X angle from the target to the camera.</returns>
         float GetXAngle(float yInput)
         {
-            //  Calculate both the offset with zero height difference.
-            var flatOffset = new Vector3(offset.x, 0f, offset.z);
-
-            //  Store the current angle in local variable.
-            var currentAngle = Vector3.SignedAngle(flatOffset, offset, m_records.rightDirection);
+            var angle = m_orbit.xAngle;
 
             //  Apply the manual rotation offset to the current angle.
-            currentAngle = currentAngle + (yInput * (m_rotationSpeed * deltaTime));
-            currentAngle = Mathf.Clamp(currentAngle, -80f, 80f);
-            return currentAngle;
+            angle += yInput * (m_rotationSpeed * deltaTime);
+            angle = Mathf.Clamp(angle, -80f, 80f);
+            return angle;
         }
 
-        Debug.Log($"Current orientation: Horizontal:{yAngle}, Vertical: {xAngle}");
+        //  Debug.Log($"Current orientation: Horizontal:{yAngle}, Vertical: {xAngle}");
 
-        ///  We apply the Y and X angles to the direction seperately.
-        ///  First, the Y rotation needs to be applied, before we know what the X angle to rotate on will be.
-        direction = Quaternion.AngleAxis(yAngle, Vector3.up) * direction;                           //  Rotation Horizontally.
-        direction = Quaternion.AngleAxis(xAngle, Vector3.Cross(direction, Vector3.up)) * direction; //  Rotation Vertically.
-
-        return direction * m_distanceFromTarget;
+        m_orbit.SetAngles(yAngle, xAngle, m_orbit.distance);
+        return m_orbit.offset;
     }
 
     ///<summary>
@@ -120,8 +109,9 @@ public class Camera : MonoBehaviour
 
     public void DrawGizmos()
     {
+        if (!Application.isPlaying) return;
         if (m_target == null) return;
-        GizmoTools.DrawSphere(m_target.position, m_distanceFromTarget, Color.white, 0.5f, true, 0.1f);
+        GizmoTools.DrawSphere(m_target.position, m_orbit.distance, Color.white, 0.5f, true, 0.1f);
     }
 
     /// <summary>
