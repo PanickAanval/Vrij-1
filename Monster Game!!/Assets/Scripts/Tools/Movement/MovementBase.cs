@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Joeri.Tools.Utilities;
 using Joeri.Tools.Debugging;
 
 namespace Joeri.Tools.Movement
@@ -21,11 +22,16 @@ namespace Joeri.Tools.Movement
         protected Accel.Flat m_horizontal = new Accel.Flat();
         protected Accel.Uncontrolled m_vertical = new Accel.Uncontrolled(0f, 0f, 0f);
 
+        protected bool m_onGround = false;
+        protected GroundInfo m_groundInfo = null;
+
         #region Properties
 
         public Vector3 velocity { get => new Vector3(m_horizontal.velocity.x, m_vertical.velocity, m_horizontal.velocity.y); }
         public Vector2 horizontalVelocity { get => m_horizontal.velocity; }
-        public bool onGround { get; protected set; }
+
+        public bool onGround { get => m_onGround; }
+        public GroundInfo groundInfo { get => m_groundInfo; }
 
         public Accel.Flat horizontal { get => m_horizontal; }
         public Accel.Uncontrolled vertical { get => m_vertical; }
@@ -63,15 +69,22 @@ namespace Joeri.Tools.Movement
 
             //  Misc.
             controller.Move(newVelocity * deltaTime);
-            onGround = isOnGround();
+            m_onGround = isOnGround(out GroundInfo groundInfo);
+            m_groundInfo = groundInfo;
         }
 
         /// <returns>True if the player is standing on valid ground. Calculated by a Physics.OverlapSphere(...).</returns>
-        public bool isOnGround()
+        public bool isOnGround(out GroundInfo info)
         {
+            info = null;
+
             if (controller == null) return false;
-            if (Physics.OverlapSphere(groundCheckOrigin, controller.radius, movementLayer, QueryTriggerInteraction.Ignore).Length > 0)
+
+            var overlappingColliders = Physics.OverlapSphere(groundCheckOrigin, controller.radius, movementLayer, QueryTriggerInteraction.Ignore);
+
+            if (overlappingColliders.Length > 0)
             {
+                info = new GroundInfo(overlappingColliders);
                 return true;
             }
             return false;
@@ -94,6 +107,24 @@ namespace Joeri.Tools.Movement
         {
             if (enabled) m_vertical.acceleration = m_gravity;
             else m_vertical.acceleration = 0f;
+        }
+
+        /// <summary>
+        /// Class holding info of the ground you're currently stnading on.
+        /// </summary>
+        public class GroundInfo
+        {
+            public readonly Collider[] colliders = null;
+
+            public GroundInfo(Collider[] interactingGroundColliders)
+            {
+                colliders = interactingGroundColliders;
+            }
+
+            public bool Contains<T>(out T[] containingComponents, params Collider[] colliders)
+            {
+                return Util.Contains(out containingComponents, colliders);
+            }
         }
     }
 }

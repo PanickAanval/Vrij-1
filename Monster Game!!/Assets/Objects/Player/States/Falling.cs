@@ -29,7 +29,23 @@ partial class Player
         {
             root.m_movement.ApplyInput(root.m_input, deltaTime);
 
-            if (root.m_movement.onGround) { SwitchToState<Walking>(); return; }
+            if (root.m_movement.onGround) { OnLand(); return; }
+        }
+
+        private void OnLand()
+        {
+            //  Return to walking if the ground does not have any special logic.
+            if (!root.m_movement.groundInfo.Contains(out IStandable[] components))
+            {
+                SwitchToState<Walking>();
+                return;
+            }
+
+            //  If it does, execute their logic.
+            for (int i = 0; i < components.Length; i++)
+            {
+                components[i].OnStand();
+            }
         }
 
         public override void OnExit()
