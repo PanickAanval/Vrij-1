@@ -9,15 +9,14 @@ using Joeri.Tools.Debugging;
 
 namespace Joeri.Tools.Movement
 {
+    [System.Serializable]
     public abstract class MovementBase
     {
-        public float speed = 10f;
-        public float grip = 5f;
-        [Space]
-        [SerializeField] private float m_gravity = -9.81f;
-        [Space]
-        public CharacterController controller = null;
-        public LayerMask movementLayer;
+        [HideInInspector] public float speed = 10f;
+        [HideInInspector] public float grip = 5f;
+
+        [SerializeField] private CharacterController m_controller = null;
+        [SerializeField] private LayerMask m_movementLayer;
 
         protected Accel.Flat m_horizontal = new Accel.Flat();
         protected Accel.Uncontrolled m_vertical = new Accel.Uncontrolled(0f, 0f, 0f);
@@ -27,23 +26,47 @@ namespace Joeri.Tools.Movement
 
         #region Properties
 
-        public Vector3 velocity { get => new Vector3(m_horizontal.velocity.x, m_vertical.velocity, m_horizontal.velocity.y); }
-        public Vector2 horizontalVelocity { get => m_horizontal.velocity; }
+        public float gravity
+        {
+            get => m_vertical.acceleration;
+            set => m_vertical.acceleration = value;
+        }
+
+        public CharacterController controller { get => m_controller; }
+
+        public Vector3 velocity 
+        { 
+            get => new Vector3(m_horizontal.velocity.x, m_vertical.velocity, m_horizontal.velocity.y);
+            set
+            {
+                m_horizontal.velocity.x = value.x;
+                m_horizontal.velocity.y = value.z;
+                m_vertical.velocity = velocity.y;
+            }
+        }
+        public Vector2 flatVelocity 
+        { 
+            get => m_horizontal.velocity;
+            set => m_horizontal.velocity = value;
+        }
+        public float verticalVelocity
+        {
+            get => m_vertical.velocity;
+            set => m_vertical.velocity = value;
+        }
 
         public bool onGround { get => m_onGround; }
         public GroundInfo groundInfo { get => m_groundInfo; }
 
-        public Accel.Flat horizontal { get => m_horizontal; }
-        public Accel.Uncontrolled vertical { get => m_vertical; }
 
         protected Vector3 groundCheckOrigin
         {
             get
             {
-                var position = controller.transform.position + controller.center;
+                var position = m_controller.transform.position + m_controller.center;
 
-                position += Vector3.down * controller.height / 2;                           //  Go to the bottom of the controller's collider.
-                position += Vector3.up * (controller.radius - controller.skinWidth * 2);    //  Set the center so that the overlap slightly reaches under the collider.
+                position += Vector3.down * m_controller.height / 2;                             //  Go to the bottom of the controller's collider.
+                position += Vector3.up * (m_controller.radius - m_controller.skinWidth * 2);    //  Set the center so that the overlap slightly reaches under the collider.
                 return position;
             }
         }
@@ -62,13 +85,13 @@ namespace Joeri.Tools.Movement
             newVelocity.z = m_horizontal.velocity.y;
 
             //  Applying rotation, before vertical velocity gets calculated.
-            if (newVelocity != Vector3.zero) controller.transform.rotation = Quaternion.LookRotation(newVelocity);
+            if (newVelocity != Vector3.zero) m_controller.transform.rotation = Quaternion.LookRotation(newVelocity);
 
             //  Calculating, and applying vertical velocity.
             newVelocity.y = m_vertical.CalculateVelocity(deltaTime);
 
             //  Misc.
-            controller.Move(newVelocity * deltaTime);
+            m_controller.Move(newVelocity * deltaTime);
             m_onGround = isOnGround(out GroundInfo groundInfo);
             m_groundInfo = groundInfo;
         }
@@ -78,9 +101,9 @@ namespace Joeri.Tools.Movement
         {
             info = null;
 
-            if (controller == null) return false;
+            if (m_controller == null) return false;
 
-            var overlappingColliders = Physics.OverlapSphere(groundCheckOrigin, controller.radius, movementLayer, QueryTriggerInteraction.Ignore);
+            var overlappingColliders = Physics.OverlapSphere(groundCheckOrigin, m_controller.radius, m_movementLayer, QueryTriggerInteraction.Ignore);
 
             if (overlappingColliders.Length > 0)
             {
@@ -95,18 +118,17 @@ namespace Joeri.Tools.Movement
         /// </summary>
         public virtual void DrawGizmos()
         {
-            GizmoTools.DrawSphere(groundCheckOrigin, controller.radius, onGround ? Color.white : Color.black, 0.5f, true, 0.75f);
-            m_horizontal.Draw(controller.transform.position, Color.blue, Color.black, 0.75f);
-            m_vertical.Draw(controller.transform.position, Vector3.up, Color.green, 0.5f);
+            GizmoTools.DrawSphere(groundCheckOrigin, m_controller.radius, onGround ? Color.white : Color.black, 0.5f, true, 0.75f);
+            m_horizontal.Draw(m_controller.transform.position, Color.blue, Color.black, 0.75f);
+            m_vertical.Draw(m_controller.transform.position, Vector3.up, Color.green, 0.5f);
         }
 
-        /// <summary>
-        /// Sets the gravity state of the movement class to the desired state.
-        /// </summary>
-        public void SetGravityState(bool enabled)
+        //  Adds the given velocity to the movement.
+        public void AddVelocity(Vector3 velocity)
         {
-            if (enabled) m_vertical.acceleration = m_gravity;
-            else m_vertical.acceleration = 0f;
+            m_horizontal.velocity.x += velocity.x;
+            m_horizontal.velocity.y += velocity.z;
+            m_vertical.velocity += velocity.y;
         }
 
         /// <summary>
@@ -121,7 +143,7 @@ namespace Joeri.Tools.Movement
                 colliders = interactingGroundColliders;
             }
 
-            public bool Contains<T>(out T[] containingComponents, params Collider[] colliders)
+            public bool Contains<T>(out T[] containingComponents)
             {
                 return Util.Contains(out containingComponents, colliders);
             }

@@ -12,8 +12,11 @@ partial class Player
     {
         public override void OnEnter()
         {
-            root.m_movement.SetGravityState(false);
-            root.m_movement.vertical.velocity = 0f;
+            root.m_movement.speed = root.m_walkSpeed;
+            root.m_movement.grip = root.m_groundGrip;
+
+            root.m_movement.gravity = 0f;
+            root.m_movement.verticalVelocity = 0f;
         }
 
         public override void OnTick(float deltaTime)

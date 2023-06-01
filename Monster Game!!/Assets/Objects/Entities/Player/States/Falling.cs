@@ -11,18 +11,10 @@ partial class Player
 {
     public class Falling : State<Player>
     {
-        private Swapper<float> m_gripSwapper;
-
-        public Settings settings { get => m_settings as Settings; }
-
-        public Falling(Settings settings) : base(settings) { }
-
         public override void OnEnter()
         {
-            m_gripSwapper = new Swapper<float>(root.m_movement.grip * settings.gripMultiplier);
-            m_gripSwapper.Swap(ref root.m_movement.grip);
-
-            root.m_movement.SetGravityState(true);
+            root.m_movement.grip = root.m_airGrip;
+            root.m_movement.gravity = root.m_gravity;
         }
 
         public override void OnTick(float deltaTime)
@@ -35,7 +27,8 @@ partial class Player
         private void OnLand()
         {
             //  Return to walking if the ground does not have any special logic.
-            if (!root.m_movement.groundInfo.Contains(out IStandable[] components))
+            //  Ideally we would want to know if any piece of ground inherits from the IStandable interface, but I have yet to figure out how.
+            if (!root.m_movement.groundInfo.Contains(out SpringyFella[] components))
             {
                 SwitchToState<Walking>();
                 return;
@@ -44,20 +37,9 @@ partial class Player
             //  If it does, execute their logic.
             for (int i = 0; i < components.Length; i++)
             {
-                components[i].OnStand();
+                components[i].OnStand(root);
+                return;
             }
-        }
-
-        public override void OnExit()
-        {
-            m_gripSwapper.Swap(ref root.m_movement.grip);
-            m_gripSwapper = null;
-        }
-
-        [System.Serializable]
-        public class Settings : ISettings
-        {
-            public float gripMultiplier;
         }
     }
 }

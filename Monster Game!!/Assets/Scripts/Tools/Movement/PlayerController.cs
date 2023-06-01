@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 using Joeri.Tools.Movement;
+using Joeri.Tools.Utilities;
 using Joeri.Tools.Debugging;
 
 namespace Joeri.Tools.Movement

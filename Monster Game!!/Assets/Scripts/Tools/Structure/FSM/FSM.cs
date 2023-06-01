@@ -10,10 +10,10 @@ namespace Joeri.Tools.Structure
     /// </summary>
     public class FSM<Root>
     {
-        private readonly Root m_root;
-        private readonly Dictionary<System.Type, State<Root>> m_states = null;
+        protected readonly Root m_root;
+        protected readonly Dictionary<System.Type, State<Root>> m_states = null;
 
-        private State<Root> m_currentState = null;
+        protected State<Root> m_currentState = null;
 
         public Root root { get => m_root; }
 
@@ -49,6 +49,19 @@ namespace Joeri.Tools.Structure
         public State SwitchToState<State>() where State : State<Root>
         {
             return SwitchToState(typeof(State)) as State;
+        }
+
+        /// <summary>
+        /// Temporarily harbors a guest state inside of the state machine.
+        /// </summary>
+        public State SwitchToGuestState<State>(State state) where State : State<Root>
+        {
+            state.Initialize(this);
+
+            m_currentState?.OnExit();
+            m_currentState = state;
+            m_currentState?.OnEnter();
+            return m_currentState as State;
         }
 
         /// <summary>

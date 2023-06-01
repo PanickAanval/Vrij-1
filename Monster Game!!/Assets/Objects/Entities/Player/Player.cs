@@ -5,17 +5,19 @@ using Joeri.Tools.Movement;
 using Joeri.Tools.Structure;
 using Joeri.Tools.Utilities;
 
-public partial class Player : MonoBehaviour
+public partial class Player : Entity
 {
+    [Header("Player Properties:")]
+    [SerializeField] private float m_jumpForce = 5f;
+
+    [Header("Player References:")]
     [SerializeField] private PlayerController m_movement;
-    [Space]
     [SerializeField] private Transform m_center;
 
-    [Header("States:")]
-    [SerializeField] private Falling.Settings m_falling;
-    [SerializeField] private Jumping.Settings m_jumping;
-
+    //  Run-time:
     private FSM<Player> m_stateMachine = null;
+
+    //  Cache:
     private Vector2 m_input;
 
     #region Properties
@@ -23,13 +25,13 @@ public partial class Player : MonoBehaviour
     public Transform center { get => m_center; }
 
     public Vector3 velocity { get => m_movement.velocity; }
-    public Vector2 horizontalVelocity { get => m_movement.horizontalVelocity; }
+    public Vector2 flatVelocity { get => m_movement.flatVelocity; }
 
     #endregion
 
     public void Setup()
     {
-        m_stateMachine = new FSM<Player>(this, typeof(Walking), new Walking(), new Falling(m_falling), new Jumping(m_jumping));
+        m_stateMachine = new FSM<Player>(this, typeof(Walking), new Walking(), new Falling(), new Jumping());
     }
 
     public void Tick(Vector2 input, float deltaTime, float cameraAngle)
@@ -40,7 +42,12 @@ public partial class Player : MonoBehaviour
         m_stateMachine.Tick(deltaTime);
     }
 
-    public void DrawGizmos()
+    public State SetGuestState<State>(State state) where State : State<Player>
+    {
+        return m_stateMachine.SwitchToGuestState(state);
+    }
+
+    public override void DrawGizmos()
     {
         m_stateMachine.DrawGizmos(transform.position + (Vector3.up * (m_movement.controller.height + m_movement.controller.radius)));
         m_movement.DrawGizmos();

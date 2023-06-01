@@ -11,14 +11,13 @@ public partial class SpringyFella
 {
     public class Idle : State<SpringyFella>
     {
-        private Settings settings { get => m_settings as Settings; }
-
-        public Idle(Settings settings) : base(settings) { }
-
         public override void OnEnter()
         {
-            root.m_movement.SetGravityState(false);
-            root.m_movement.vertical.velocity = 0f;
+            root.m_movement.speed = root.m_walkSpeed;
+            root.m_movement.grip = root.m_groundGrip;
+
+            root.m_movement.gravity = 0f;
+            root.m_movement.verticalVelocity = 0f;
         }
 
         public override void OnTick(float deltaTime)
@@ -28,7 +27,7 @@ public partial class SpringyFella
                 SwitchToState<Falling>();
                 return;
             }
-            if (Vector3.Distance(root.transform.position, root.m_player.transform.position) < settings.detectionRange)
+            if (Vector3.Distance(root.transform.position, root.m_player.transform.position) < root.m_detectionRange)
             {
                 SwitchToState<Follow>();
                 return;
@@ -39,13 +38,7 @@ public partial class SpringyFella
 
         public override void OnDrawGizmos()
         {
-            GizmoTools.DrawOutlinedDisc(root.transform.position, settings.detectionRange, Color.red, Color.white, 0.25f);
-        }
-
-        [System.Serializable]
-        public class Settings : ISettings
-        {
-            public float detectionRange;
+            GizmoTools.DrawOutlinedDisc(root.transform.position, root.m_detectionRange, Color.red, Color.white, 0.25f);
         }
     }
 }

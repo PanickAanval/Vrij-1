@@ -31,7 +31,7 @@ namespace Joeri.Tools.Movement
 
         public void ApplyBehaviorVelocity(float deltaTime)
         {
-            var context = new Behavior.Context(deltaTime, speed, Vectors.VectorToFlat(controller.transform.position), horizontalVelocity);
+            var context = new Behavior.Context(deltaTime, speed, Vectors.VectorToFlat(controller.transform.position), flatVelocity);
             var desiredVelocity = m_behaviorHandler.GetDesiredVelocity(context);
 
             ApplyDesiredVelocity(desiredVelocity, deltaTime);

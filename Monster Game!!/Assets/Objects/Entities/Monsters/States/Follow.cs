@@ -12,13 +12,9 @@ public partial class SpringyFella
 {
     public class Follow : State<SpringyFella>
     {
-        private Settings settings { get => m_settings as Settings; }
-
-        public Follow(Settings settings) : base(settings) { }
-        
         public override void OnEnter()
         {
-            root.m_movement.SetBehaviors(new Pursue(settings.lookAheadTime, root.m_player.transform));
+            root.m_movement.SetBehaviors(new Pursue(root.m_lookAheadTime, root.m_player.transform));
         }
 
         public override void OnTick(float deltaTime)
@@ -28,7 +24,7 @@ public partial class SpringyFella
                 SwitchToState<Falling>();
                 return;
             }
-            if (Vector3.Distance(root.transform.position, root.m_player.transform.position) > settings.motivationRange)
+            if (Vector3.Distance(root.transform.position, root.m_player.transform.position) > root.m_detectionRange)
             {
                 SwitchToState<Idle>();
                 return;
@@ -44,15 +40,7 @@ public partial class SpringyFella
 
         public override void OnDrawGizmos()
         {
-            GizmoTools.DrawOutlinedDisc(root.transform.position, settings.motivationRange, Color.blue, Color.white, 0.1f);
-        }
-
-
-        [System.Serializable]
-        public class Settings : ISettings
-        {
-            public float lookAheadTime;
-            public float motivationRange;
+            GizmoTools.DrawOutlinedDisc(root.transform.position, root.m_detectionRange, Color.blue, Color.white, 0.1f);
         }
     }
 }
