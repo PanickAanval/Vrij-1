@@ -7,13 +7,15 @@ public class PlayerInstance : MonoBehaviour
     [SerializeField] private Camera m_camera;
     [SerializeField] private Player m_player;
 
-    private void Start()
+    public Player player { get => m_player; }
+
+    public void Setup()
     {
         m_camera.Setup(m_player.center);
         m_player.Setup();
     }
 
-    private void Update()
+    public void Tick(float deltaTime)
     {
         var leftInput = Vector2.zero;
         if (Input.GetKey(KeyCode.W)) leftInput.y++;
@@ -27,11 +29,11 @@ public class PlayerInstance : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow)) rightInput.x--;
         if (Input.GetKey(KeyCode.RightArrow)) rightInput.x++;
 
-        m_player.Tick(leftInput, Time.deltaTime, -m_camera.transform.eulerAngles.y);
-        m_camera.Tick(rightInput, m_player.horizontalVelocity, Time.deltaTime);
+        m_player.Tick(leftInput, deltaTime, -m_camera.transform.eulerAngles.y);
+        m_camera.Tick(rightInput, m_player.horizontalVelocity, deltaTime);
     }
 
-    private void OnDrawGizmosSelected()
+    public void DrawGizmos()
     {
         m_camera.DrawGizmos();
         m_player.DrawGizmos();

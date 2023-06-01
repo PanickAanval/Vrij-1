@@ -36,8 +36,7 @@ namespace Joeri.Tools.Movement
         {
             var targetPosition = m_target.position;
 
-            GizmoTools.DrawLine(position, m_target.position, Color.red);
-            GizmoTools.DrawLine(targetPosition, Vectors.FlatToVector(m_futureTargetPosition, targetPosition.y), Color.blue);
+            GizmoTools.DrawLine(position, targetPosition, Color.red);
         }
     }
 }

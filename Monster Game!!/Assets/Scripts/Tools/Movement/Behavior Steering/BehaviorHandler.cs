@@ -23,6 +23,14 @@ namespace Joeri.Tools.Movement
             m_behaviors = behaviors;
         }
 
+        /// <summary>
+        /// Clears the behaviors set in the behavior handler.
+        /// </summary>
+        public void ClearBehaviors()
+        {
+            m_behaviors = null;
+        }
+
         /// <returns>The combined velocity of all behaviors, clamped by the 'speed' parameter.</returns>
         public Vector2 GetDesiredVelocity(Behavior.Context context)
         {

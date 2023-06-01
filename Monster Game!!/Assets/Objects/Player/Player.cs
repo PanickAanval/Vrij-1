@@ -42,9 +42,7 @@ public partial class Player : MonoBehaviour
 
     public void DrawGizmos()
     {
-        m_movement.DrawGizmos();
-
-        if (!Application.isPlaying) return;
         m_stateMachine.DrawGizmos(transform.position + (Vector3.up * (m_movement.controller.height + m_movement.controller.radius)));
+        m_movement.DrawGizmos();
     }
 }
