@@ -10,7 +10,7 @@ using Joeri.Tools.Movement;
 
 public abstract class Entity : MonoBehaviour
 {
-    [Header("Properties")]
+    [Header("Properties:")]
     [SerializeField] protected float m_walkSpeed = 8f;
     [SerializeField] protected float m_groundGrip = 8f;
     [Space]

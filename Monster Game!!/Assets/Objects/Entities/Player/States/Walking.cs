@@ -25,6 +25,7 @@ partial class Player
 
             if (!root.m_movement.onGround) { SwitchToState<Falling>(); return; }
             if (Input.GetKeyDown(KeyCode.Space)) { SwitchToState<Jumping>(); return; }
+            if (Input.GetKeyDown(KeyCode.F)) { SwitchToState<Grabbing>(); return; }
         }
     }
 }

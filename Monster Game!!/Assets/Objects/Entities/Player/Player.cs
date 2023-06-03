@@ -9,10 +9,18 @@ public partial class Player : Entity
 {
     [Header("Player Properties:")]
     [SerializeField] private float m_jumpForce = 5f;
+    [Space]
+    [SerializeField] private float m_grabTime = 1f;
+    [SerializeField] private float m_grabGrip = 1f;
+    [Space]
+    [SerializeField] private float m_carrySmoothTime = 1f;
 
     [Header("Player References:")]
     [SerializeField] private PlayerController m_movement;
+    [SerializeField] private GrabbyHandler m_grabbing;
+    [Space]
     [SerializeField] private Transform m_center;
+    [SerializeField] private Transform m_grabber;
 
     //  Run-time:
     private FSM<Player> m_stateMachine = null;
@@ -22,7 +30,10 @@ public partial class Player : Entity
 
     #region Properties
 
+    public float carrySmoothTime { get => m_carrySmoothTime; }
+
     public Transform center { get => m_center; }
+    public Transform grabber { get => m_grabber; }
 
     public Vector3 velocity { get => m_movement.velocity; }
     public Vector2 flatVelocity { get => m_movement.flatVelocity; }
@@ -31,7 +42,8 @@ public partial class Player : Entity
 
     public void Setup()
     {
-        m_stateMachine = new FSM<Player>(this, typeof(Walking), new Walking(), new Falling(), new Jumping());
+        m_stateMachine = new FSM<Player>(this, typeof(Walking), new Walking(), new Falling(), new Jumping(), new Grabbing(m_grabTime));
+        m_grabbing.Setup(this);
     }
 
     public void Tick(Vector2 input, float deltaTime, float cameraAngle)

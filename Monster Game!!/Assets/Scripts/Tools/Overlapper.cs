@@ -8,30 +8,35 @@ using Joeri.Tools.Debugging;
 
 namespace Joeri.Tools
 {
-    [System.Serializable]
-    public class Overlapper
+    public class Overlapper<Target>
     {
-        public float radius = 1f;
-        public LayerMask mask;
+        private float m_radius = 1f;
+        private LayerMask m_mask;
 
         private bool m_active = false;
-        private Dictionary<int, Collider> m_caughtColliders = null;
+        private Dictionary<int, Target> m_caughtTargets = null;
 
-        private event Action<Collider> m_onEnter = null;
-        private event Action<Collider> m_onStay = null;
+        private event Action<Target> m_onEnter = null;
+        private event Action<Target> m_onStay = null;
 
-        public void Activate(Action<Collider> onEnter, Action<Collider> onStay)
+        public Overlapper(float radius, LayerMask mask)
+        {
+            m_radius = radius;
+            m_mask = mask;
+        }
+
+        public void Activate(Action<Target> onEnter, Action<Target> onStay)
         {
             m_onEnter = onEnter;
             m_onStay = onStay;
-            m_caughtColliders = new Dictionary<int, Collider>();
+            m_caughtTargets = new Dictionary<int, Target>();
             m_active = true;
         }
 
         public void Deactivate()
         {
-            m_caughtColliders.Clear();
-            m_caughtColliders = null;
+            m_caughtTargets.Clear();
+            m_caughtTargets = null;
             m_active = false;
         }
 
@@ -43,27 +48,32 @@ namespace Joeri.Tools
                 return;
             }
 
-            var colliders = Physics.OverlapSphere(position, radius, mask);
+            var colliders = Physics.OverlapSphere(position, m_radius, m_mask);
 
             if (colliders.Length <= 0) return;
             for (int i = 0; i < colliders.Length; i++)
             {
-                if (m_caughtColliders.ContainsKey(colliders[i].GetHashCode()))
+                //  Move to next iteration if the caught collider does not have the desired component.
+                if (!colliders[i].TryGetComponent(out Target target)) continue;
+
+                //  If the caught collider does have the desired component, and is already present in the dictionary, cal OnStay(...).
+                if (m_caughtTargets.ContainsKey(target.GetHashCode()))
                 {
-                    m_onStay?.Invoke(colliders[i]);
+                    m_onStay?.Invoke(target);
+                    continue;
                 }
-                else
-                {
-                    m_caughtColliders.Add(colliders[i].GetHashCode(), colliders[i]);
-                    m_onEnter?.Invoke(colliders[i]);
-                }
+
+                //  If the caught collider has the desired component, and is not yet present, it has succesfully entered the overlapper.
+                m_caughtTargets.Add(target.GetHashCode(), target);
+                m_onEnter?.Invoke(target);
+                m_onStay?.Invoke(target);
             }
         }
 
         public void DrawGizmos(Vector3 pos, Color color)
         {
             if (!m_active) return;
-            GizmoTools.DrawSphere(pos, radius, color, 0.75f, true, 0.5f);
+            GizmoTools.DrawSphere(pos, m_radius, color, 0.75f, true, 0.5f);
         }
     }
 }

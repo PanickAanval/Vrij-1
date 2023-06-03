@@ -401,16 +401,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 766194511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fb06df5739885748914a8e3e9bc4487, type: 3}
+  m_Script: {fileID: 11500000, guid: c9001c22c1e7ca64eb0ea7400a086d02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_walkSpeed: 1
   m_groundGrip: 3
   m_airGrip: 5
   m_gravity: -9.81
-  m_launchPower: 10
-  m_detectionRange: 5
-  m_lookAheadTime: 0.1
   m_movement:
     speed: 10
     grip: 5
@@ -418,6 +415,9 @@ MonoBehaviour:
     m_movementLayer:
       serializedVersion: 2
       m_Bits: 55
+  m_launchPower: 10
+  m_detectionRange: 5
+  m_lookAheadTime: 0.1
 --- !u!65 &766194515
 BoxCollider:
   m_ObjectHideFlags: 0
