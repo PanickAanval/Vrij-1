@@ -29,6 +29,7 @@ partial class Player
         {
             root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
             root.m_grabbing.Tick();
+            root.m_movement.grip = Mathf.Lerp(root.m_grabGrip, root.m_groundGrip, m_timer.percent);
 
             if (!root.m_movement.onGround) { SwitchToState<Falling>(); return; }
             //if (Input.GetKeyDown(KeyCode.Space)) { SwitchToState<Jumping>(); return; }

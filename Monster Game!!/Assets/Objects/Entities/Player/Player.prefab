@@ -297,7 +297,7 @@ MonoBehaviour:
   m_airGrip: 5
   m_gravity: -9.81
   m_jumpForce: 5
-  m_grabTime: 1
+  m_grabTime: 0.25
   m_grabGrip: 1
   m_carrySmoothTime: 0.05
   m_movement:
