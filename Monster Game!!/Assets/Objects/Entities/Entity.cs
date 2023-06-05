@@ -11,11 +11,11 @@ using Joeri.Tools.Movement;
 public abstract class Entity : MonoBehaviour
 {
     [Header("Properties:")]
-    [SerializeField] protected float m_walkSpeed = 8f;
-    [SerializeField] protected float m_groundGrip = 8f;
+    public float walkSpeed = 8f;
+    public float groundGrip = 8f;
     [Space]
-    [SerializeField] protected float m_airGrip = 5f;
-    [SerializeField] protected float m_gravity = -9.81f;
+    public float airGrip = 5f;
+    public float gravity = -9.81f;
 
     public virtual void DrawGizmos() { }
 }

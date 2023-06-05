@@ -28,19 +28,30 @@ namespace Joeri.Tools
 
         /// <summary>
         /// Swap the value of a variable with whatever is currently saved within the swapper.
+        /// Uses a ref parameter for ease of use.
         /// </summary>
         /// <returns>The value that has been swapped out.</returns>
         public T Swap(ref T valueToBeSwapped)
         {
-            if (holdingValue == null)       Debug.LogWarning("The holding value is null. Be advised.");
-            if (valueToBeSwapped == null)   Debug.LogWarning("The value to be swapped is null. Be advised.");
+            var valueToReturn = holdingValue;
 
-            var valueToHold = valueToBeSwapped;
+            valueToBeSwapped = Swap(valueToBeSwapped);
+            return valueToReturn;
+        }
 
-            valueToBeSwapped = holdingValue;
-            holdingValue = valueToHold;
+        /// <summary>
+        /// Swap the value of a variable with whatever is currently saved within the swapper.
+        /// </summary>
+        /// <returns>The value that has been swapped out.</returns>
+        public T Swap(T valueToBeSwapped)
+        {
+            if (holdingValue == null) Debug.LogWarning("The holding value is null. Be advised.");
+            if (valueToBeSwapped == null) Debug.LogWarning("The value to be swapped is null. Be advised.");
 
-            return valueToBeSwapped;
+            var valueToReturn = holdingValue;
+            holdingValue = valueToBeSwapped;
+
+            return valueToReturn;
         }
     }
 }

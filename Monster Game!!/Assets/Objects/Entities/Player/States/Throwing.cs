@@ -29,7 +29,7 @@ partial class Player
         public override void OnTick(float deltaTime)
         {
             m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
-            m_root.m_movement.grip = Mathf.Lerp(m_root.m_grabGrip, m_root.m_groundGrip, m_timer.percent);
+            m_root.m_movement.grip = Mathf.Lerp(m_root.m_grabGrip, m_root.groundGrip, m_timer.percent);
 
             if (!m_root.m_movement.onGround)
             {

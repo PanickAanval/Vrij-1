@@ -15,8 +15,8 @@ partial class Player
 
         public override void OnEnter()
         {
-            m_root.m_movement.grip = m_root.m_airGrip;
-            m_root.m_movement.gravity = m_root.m_gravity;
+            m_root.m_movement.grip = m_root.airGrip;
+            m_root.m_movement.gravity = m_root.gravity;
             m_root.m_movement.verticalVelocity = m_root.m_jumpForce;
         }
 

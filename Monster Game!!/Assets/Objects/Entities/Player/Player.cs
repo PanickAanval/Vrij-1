@@ -43,6 +43,9 @@ public partial class Player : Entity
     public Vector3 velocity { get => m_movement.velocity; }
     public Vector2 flatVelocity { get => m_movement.flatVelocity; }
 
+    public float speed { get => m_movement.speed; set => m_movement.speed = value; }
+    public float grip { get => m_movement.grip; set => m_movement.grip = value; }
+
     #endregion
 
     public void Setup()

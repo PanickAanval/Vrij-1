@@ -20,9 +20,11 @@ public abstract partial class Monster : Entity, IGrabbable
         m_player = player;
     }
 
-    public abstract void OnGrab(Player player);
+    public abstract void Tick(float deltaTime);
 
-    public abstract void OnRelease(Player player, Vector3 releaseVelocity);
+    public virtual void OnGrab(Player player) { }
+
+    public virtual void OnRelease(Player player, Vector3 releaseVelocity) { }
 
     public override void DrawGizmos()
     {

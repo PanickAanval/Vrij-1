@@ -5,12 +5,12 @@ using UnityEngine;
 public class EntityManager : MonoBehaviour
 {
     [SerializeField] private PlayerInstance m_playerInstance;
-    [SerializeField] private SpringyFella m_monster;
+    [SerializeField] private Monster[] m_monsters;
 
     private void Start()
     {
         m_playerInstance.Setup();
-        m_monster.Setup(m_playerInstance.player);
+        for (int i = 0; i < m_monsters.Length; i++) m_monsters[i].Setup(m_playerInstance.player);
     }
 
     private void Update()
@@ -18,13 +18,13 @@ public class EntityManager : MonoBehaviour
         var deltaTime = Time.deltaTime;
 
         m_playerInstance.Tick(deltaTime);
-        m_monster.Tick(deltaTime);
+        for (int i = 0; i < m_monsters.Length; i++) m_monsters[i].Tick(deltaTime);
     }
 
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
         m_playerInstance.DrawGizmos();
-        m_monster.DrawGizmos();
+        for (int i = 0; i < m_monsters.Length; i++) m_monsters[i].DrawGizmos();
     }
 }

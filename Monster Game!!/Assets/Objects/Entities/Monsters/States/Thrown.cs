@@ -21,7 +21,7 @@ public abstract partial class Monster
         public override void OnEnter()
         {
             m_root.m_movement.grip = 0f;
-            m_root.m_movement.gravity = m_root.m_gravity;
+            m_root.m_movement.gravity = m_root.gravity;
         }
 
         public override void OnTick(float deltaTime)

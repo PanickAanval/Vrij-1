@@ -14,8 +14,8 @@ partial class Player
 
         public override void OnEnter()
         {
-            m_root.m_movement.speed = m_root.m_walkSpeed;
-            m_root.m_movement.grip = m_root.m_groundGrip;
+            m_root.m_movement.speed = m_root.walkSpeed;
+            m_root.m_movement.grip = m_root.groundGrip;
 
             m_root.m_movement.gravity = 0f;
             m_root.m_movement.verticalVelocity = 0f;

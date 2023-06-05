@@ -12,6 +12,7 @@ namespace Joeri.Tools.Movement
     [System.Serializable]
     public abstract class MovementBase
     {
+        [HideInInspector] public bool rotate = true;    //  Temporary?
         [HideInInspector] public float speed = 10f;
         [HideInInspector] public float grip = 5f;
 
@@ -41,7 +42,7 @@ namespace Joeri.Tools.Movement
             {
                 m_horizontal.velocity.x = value.x;
                 m_horizontal.velocity.y = value.z;
-                m_vertical.velocity = velocity.y;
+                m_vertical.velocity = value.y;
             }
         }
         public Vector2 flatVelocity 
@@ -85,7 +86,7 @@ namespace Joeri.Tools.Movement
             newVelocity.z = m_horizontal.velocity.y;
 
             //  Applying rotation, before vertical velocity gets calculated.
-            if (newVelocity != Vector3.zero) m_controller.transform.rotation = Quaternion.LookRotation(newVelocity);
+            if (newVelocity != Vector3.zero && rotate) m_controller.transform.rotation = Quaternion.LookRotation(newVelocity);
 
             //  Calculating, and applying vertical velocity.
             newVelocity.y = m_vertical.CalculateVelocity(deltaTime);

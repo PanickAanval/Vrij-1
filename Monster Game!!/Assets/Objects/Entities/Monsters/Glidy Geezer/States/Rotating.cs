@@ -4,17 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Joeri.Tools;
 using Joeri.Tools.Structure;
 using Joeri.Tools.Debugging;
 
-public partial class SpringyFella
+public partial class GlidyGeezer
 {
-    public class Idle : FlexState<SpringyFella>
+    public class Rotating : FlexState<GlidyGeezer>
     {
-        public Idle(SpringyFella root) : base(root) { }
+        private Timer m_timer = null;
+
+        public Rotating(GlidyGeezer root) : base(root) { }
 
         public override void OnEnter()
         {
+            m_timer = new Timer(m_root.m_rotationTime);
+
+            m_root.m_movement.rotate = false;
             m_root.m_movement.speed = m_root.walkSpeed;
             m_root.m_movement.grip = m_root.groundGrip;
 
@@ -25,22 +31,24 @@ public partial class SpringyFella
         public override void OnTick(float deltaTime)
         {
             m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
+            m_root.transform.localEulerAngles += Vector3.up * ((m_root.m_rotateAmount / m_root.m_rotationTime) * deltaTime);
 
             if (!m_root.m_movement.onGround)
             {
                 SwitchToState(typeof(Falling));
                 return;
             }
-            if (Vector3.Distance(m_root.transform.position, m_root.m_player.transform.position) < m_root.m_detectionRange)
+            if (m_timer.HasReached(deltaTime))
             {
-                SwitchToState(typeof(Follow));
+                m_root.m_movement.velocity = (m_root.transform.forward + Vector3.up) * m_root.m_jumpForce;
                 return;
             }
         }
 
-        public override void OnDrawGizmos()
+        public override void OnExit()
         {
-            GizmoTools.DrawOutlinedDisc(m_root.transform.position, m_root.m_detectionRange, Color.red, Color.white, 0.25f);
+            m_root.m_movement.rotate = true;
+            m_timer = null;
         }
     }
 }
