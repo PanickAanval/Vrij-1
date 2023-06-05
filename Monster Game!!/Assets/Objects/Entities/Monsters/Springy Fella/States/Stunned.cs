@@ -29,6 +29,9 @@ public partial class SpringyFella
 
         public override void OnTick(float deltaTime)
         {
+            m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
+            m_root.transform.Rotate(Vector3.up * (360f * deltaTime), Space.Self);
+
             if (m_timer.HasReached(deltaTime))
             {
                 SwitchToState(typeof(Idle));
@@ -39,9 +42,6 @@ public partial class SpringyFella
                 SwitchToState(typeof(Falling));
                 return;
             }
-
-            m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
-            m_root.transform.Rotate(Vector3.up * (360f * deltaTime), Space.Self);
         }
 
         public override void OnExit()

@@ -24,6 +24,8 @@ public partial class SpringyFella
 
         public override void OnTick(float deltaTime)
         {
+            m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
+
             if (!m_root.m_movement.onGround)
             {
                 SwitchToState(typeof(Falling));
@@ -34,8 +36,6 @@ public partial class SpringyFella
                 SwitchToState(typeof(Follow));
                 return;
             }
-
-            m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
         }
 
         public override void OnDrawGizmos()

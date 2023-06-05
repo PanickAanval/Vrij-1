@@ -21,6 +21,8 @@ public partial class SpringyFella
 
         public override void OnTick(float deltaTime)
         {
+            m_root.m_movement.ApplyBehaviorVelocity(deltaTime);
+
             if (!m_root.m_movement.onGround)
             {
                 SwitchToState(typeof(Falling));
@@ -28,11 +30,9 @@ public partial class SpringyFella
             }
             if (Vector3.Distance(m_root.transform.position, m_root.m_player.transform.position) > m_root.m_detectionRange)
             {
-                SwitchToState(typeof(Falling));
+                SwitchToState(typeof(Idle));
                 return;
             }
-
-            m_root.m_movement.ApplyBehaviorVelocity(deltaTime);
         }
 
         public override void OnExit()
