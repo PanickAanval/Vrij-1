@@ -30,7 +30,7 @@ public class PlayerInstance : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow)) rightInput.x++;
 
         m_player.Tick(leftInput.normalized, deltaTime, -m_camera.transform.eulerAngles.y);
-        m_camera.Tick(rightInput, m_player.flatVelocity, deltaTime);
+        m_camera.Tick(-rightInput, m_player.flatVelocity, deltaTime);
     }
 
     public void DrawGizmos()
