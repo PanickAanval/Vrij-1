@@ -31,6 +31,7 @@ public partial class Player : Entity
 
     //  TESTING PURPOSES:
     private IGrabbable m_grabbingItem = null;
+    private bool m_airJumpAvailable = true;
 
     #region Properties
 
