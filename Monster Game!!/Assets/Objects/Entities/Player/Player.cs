@@ -23,7 +23,7 @@ public partial class Player : Entity
     [SerializeField] private Transform m_grabber;
 
     //  Run-time:
-    private FSM<Player> m_stateMachine = null;
+    private FSM m_stateMachine = null;
 
     //  Cache:
     private Vector2 m_input;
@@ -42,8 +42,16 @@ public partial class Player : Entity
 
     public void Setup()
     {
-        m_stateMachine = new FSM<Player>(this, typeof(Walking), new Walking(), new Falling(), new Jumping(), new Grabbing(m_grabTime));
         m_grabbing.Setup(this);
+        m_stateMachine = new FSM
+            (
+                typeof(Walking),
+                new Walking(this),
+                new Falling(this),
+                new Jumping(this),
+                new Grabbing(this, m_grabTime),
+                new Launched(this)
+            );
     }
 
     public void Tick(Vector2 input, float deltaTime, float cameraAngle)
@@ -54,9 +62,9 @@ public partial class Player : Entity
         m_stateMachine.Tick(deltaTime);
     }
 
-    public State SetGuestState<State>(State state) where State : State<Player>
+    public void Launch(float launchPower)
     {
-        return m_stateMachine.SwitchToGuestState(state);
+        m_stateMachine.SwitchToState<Launched>().Setup(launchPower);
     }
 
     public override void DrawGizmos()

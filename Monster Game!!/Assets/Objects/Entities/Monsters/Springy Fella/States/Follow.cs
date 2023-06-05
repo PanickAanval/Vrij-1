@@ -10,37 +10,39 @@ using Joeri.Tools.Debugging;
 
 public partial class SpringyFella
 {
-    public class Follow : State<SpringyFella>
+    public class Follow : FlexState<SpringyFella>
     {
+        public Follow(SpringyFella root) : base(root) { }
+
         public override void OnEnter()
         {
-            root.m_movement.SetBehaviors(new Pursue(root.m_lookAheadTime, root.m_player.transform));
+            m_root.m_movement.SetBehaviors(new Pursue(m_root.m_lookAheadTime, m_root.m_player.transform));
         }
 
         public override void OnTick(float deltaTime)
         {
-            if (!root.m_movement.onGround)
+            if (!m_root.m_movement.onGround)
             {
-                SwitchToState<Falling>();
+                SwitchToState(typeof(Falling));
                 return;
             }
-            if (Vector3.Distance(root.transform.position, root.m_player.transform.position) > root.m_detectionRange)
+            if (Vector3.Distance(m_root.transform.position, m_root.m_player.transform.position) > m_root.m_detectionRange)
             {
-                SwitchToState<Idle>();
+                SwitchToState(typeof(Falling));
                 return;
             }
 
-            root.m_movement.ApplyBehaviorVelocity(deltaTime);
+            m_root.m_movement.ApplyBehaviorVelocity(deltaTime);
         }
 
         public override void OnExit()
         {
-            root.m_movement.ClearBehaviors();
+            m_root.m_movement.ClearBehaviors();
         }
 
         public override void OnDrawGizmos()
         {
-            GizmoTools.DrawOutlinedDisc(root.transform.position, root.m_detectionRange, Color.blue, Color.white, 0.1f);
+            GizmoTools.DrawOutlinedDisc(m_root.transform.position, m_root.m_detectionRange, Color.blue, Color.white, 0.1f);
         }
     }
 }

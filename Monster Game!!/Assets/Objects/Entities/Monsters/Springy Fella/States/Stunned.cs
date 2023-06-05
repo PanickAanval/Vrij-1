@@ -4,17 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Joeri.Tools;
 using Joeri.Tools.Structure;
 using Joeri.Tools.Debugging;
 
 public partial class SpringyFella
 {
-    public class Idle : FlexState<SpringyFella>
+    public class Stunned : FlexState<SpringyFella>
     {
-        public Idle(SpringyFella root) : base(root) { }
+        private Timer m_timer = null;
+
+        public Stunned(SpringyFella root) : base(root) { }
 
         public override void OnEnter()
         {
+            m_timer = new Timer(m_root.m_stunnedTime);
+
             m_root.m_movement.speed = m_root.m_walkSpeed;
             m_root.m_movement.grip = m_root.m_groundGrip;
 
@@ -24,23 +29,24 @@ public partial class SpringyFella
 
         public override void OnTick(float deltaTime)
         {
+            if (m_timer.HasReached(deltaTime))
+            {
+                SwitchToState(typeof(Idle));
+                return;
+            }
             if (!m_root.m_movement.onGround)
             {
                 SwitchToState(typeof(Falling));
                 return;
             }
-            if (Vector3.Distance(m_root.transform.position, m_root.m_player.transform.position) < m_root.m_detectionRange)
-            {
-                SwitchToState(typeof(Follow));
-                return;
-            }
 
             m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
+            m_root.transform.Rotate(Vector3.up * (360f * deltaTime), Space.Self);
         }
 
-        public override void OnDrawGizmos()
+        public override void OnExit()
         {
-            GizmoTools.DrawOutlinedDisc(m_root.transform.position, m_root.m_detectionRange, Color.red, Color.white, 0.25f);
+            m_timer = null;
         }
     }
 }

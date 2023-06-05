@@ -8,19 +8,15 @@ namespace Joeri.Tools.Structure
     /// <summary>
     /// Class handling a class-based finite state machine system,
     /// </summary>
-    public class FSM<Root>
+    public class FSM
     {
-        protected readonly Root m_root;
-        protected readonly Dictionary<System.Type, State<Root>> m_states = null;
+        protected readonly Dictionary<System.Type, State> m_states = null;
 
-        protected State<Root> m_currentState = null;
+        protected State m_currentState = null;
 
-        public Root root { get => m_root; }
-
-        public FSM(Root root, System.Type startState, params State<Root>[] states)
+        public FSM(System.Type startState, params State[] states)
         {
-            m_root = root;
-            m_states = new Dictionary<System.Type, State<Root>>();
+            m_states = new Dictionary<System.Type, State>();
 
             //  All the state instances in the parameter get initialized, and added to the dictionary.
             foreach (var state in states)
@@ -32,9 +28,17 @@ namespace Joeri.Tools.Structure
         }
 
         /// <summary>
+        /// Updates the finite state machine's logic.
+        /// </summary>
+        public virtual void Tick(float deltaTime)
+        {
+            m_currentState.OnTick(deltaTime);
+        }
+
+        /// <summary>
         /// Switches to a new state based on the passed in type parameter.
         /// </summary>
-        public State<Root> SwitchToState(System.Type state)
+        public State SwitchToState(System.Type state)
         {
             m_currentState?.OnExit();
             try { m_currentState = m_states[state]; }
@@ -46,30 +50,9 @@ namespace Joeri.Tools.Structure
         /// <summary>
         /// Switches to a new state based on the generic parameter.
         /// </summary>
-        public State SwitchToState<State>() where State : State<Root>
+        public T SwitchToState<T>() where T : State
         {
-            return SwitchToState(typeof(State)) as State;
-        }
-
-        /// <summary>
-        /// Temporarily harbors a guest state inside of the state machine.
-        /// </summary>
-        public State SwitchToGuestState<State>(State state) where State : State<Root>
-        {
-            state.Initialize(this);
-
-            m_currentState?.OnExit();
-            m_currentState = state;
-            m_currentState?.OnEnter();
-            return m_currentState as State;
-        }
-
-        /// <summary>
-        /// Updates the finite state machine's logic.
-        /// </summary>
-        public virtual void Tick(float deltaTime)
-        {
-            m_currentState.OnTick(deltaTime);
+            return (T)SwitchToState(typeof(T));
         }
 
         /// <summary>
