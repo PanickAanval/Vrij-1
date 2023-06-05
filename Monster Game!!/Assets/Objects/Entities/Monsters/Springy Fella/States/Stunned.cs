@@ -30,7 +30,7 @@ public partial class SpringyFella
         public override void OnTick(float deltaTime)
         {
             m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
-            m_root.transform.Rotate(Vector3.up * (360f * deltaTime), Space.Self);
+            m_root.transform.localEulerAngles += Vector3.up * (360f * deltaTime);
 
             if (m_timer.HasReached(deltaTime))
             {

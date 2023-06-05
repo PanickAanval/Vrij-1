@@ -19,6 +19,8 @@ namespace Joeri.Tools
         private event Action<Target> m_onEnter = null;
         private event Action<Target> m_onStay = null;
 
+        public Dictionary<int, Target> caughtTargets { get => m_caughtTargets; }
+
         public Overlapper(float radius, LayerMask mask)
         {
             m_radius = radius;
@@ -27,6 +29,12 @@ namespace Joeri.Tools
 
         public void Activate(Action<Target> onEnter, Action<Target> onStay)
         {
+            if (m_active)
+            {
+                Debug.LogWarning("Overlapper is already active. Won't override.");
+                return;
+            }
+
             m_onEnter = onEnter;
             m_onStay = onStay;
             m_caughtTargets = new Dictionary<int, Target>();
@@ -35,6 +43,12 @@ namespace Joeri.Tools
 
         public void Deactivate()
         {
+            if (!m_active)
+            {
+                Debug.LogWarning("Overlapper is already deactivated. Won't override.");
+                return;
+            }
+
             m_caughtTargets.Clear();
             m_caughtTargets = null;
             m_active = false;

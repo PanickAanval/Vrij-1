@@ -300,6 +300,7 @@ MonoBehaviour:
   m_grabTime: 0.25
   m_grabGrip: 1
   m_carrySmoothTime: 0.05
+  m_throwStrength: 15
   m_movement:
     speed: 8
     grip: 8

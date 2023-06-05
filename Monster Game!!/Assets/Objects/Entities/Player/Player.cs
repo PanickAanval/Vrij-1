@@ -14,6 +14,7 @@ public partial class Player : Entity
     [SerializeField] private float m_grabGrip = 1f;
     [Space]
     [SerializeField] private float m_carrySmoothTime = 1f;
+    [SerializeField] private float m_throwStrength = 5f;
 
     [Header("Player References:")]
     [SerializeField] private PlayerController m_movement;
@@ -27,6 +28,9 @@ public partial class Player : Entity
 
     //  Cache:
     private Vector2 m_input;
+
+    //  TESTING PURPOSES:
+    private IGrabbable m_grabbingItem = null;
 
     #region Properties
 
@@ -49,7 +53,8 @@ public partial class Player : Entity
                 new Walking(this),
                 new Falling(this),
                 new Jumping(this),
-                new Grabbing(this, m_grabTime),
+                new Grabbing(this),
+                new Throwing(this),
                 new Launched(this)
             );
     }

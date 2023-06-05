@@ -25,9 +25,26 @@ partial class Player
         {
             m_root.m_movement.ApplyInput(m_root.m_input, deltaTime);
 
-            if (!m_root.m_movement.onGround) { SwitchToState<Falling>(); return; }
-            if (Input.GetKeyDown(KeyCode.Space)) { SwitchToState<Jumping>(); return; }
-            if (Input.GetKeyDown(KeyCode.F)) { SwitchToState<Grabbing>(); return; }
+            if (!m_root.m_movement.onGround)
+            {
+                SwitchToState(typeof(Falling));
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SwitchToState(typeof(Jumping));
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                if (m_root.m_grabbingItem == null)
+                {
+                    SwitchToState(typeof(Grabbing));
+                    return;
+                }
+                SwitchToState(typeof(Throwing));
+                return;
+            }
         }
     }
 }

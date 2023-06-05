@@ -29,6 +29,20 @@ public partial class Player
             m_hitBox = new Overlapper<IGrabbable>(m_radius, m_mask);
         }
 
+        public bool CaughtSomething(out IGrabbable caughtItem)
+        {
+            caughtItem = null;
+            if (m_state == State.Inactive) return false;
+
+            Tick();
+            if (m_hitBox.caughtTargets.Count > 0)
+            {
+                caughtItem = m_hitBox.caughtTargets.First().Value;
+                return true;
+            }
+            return false;
+        }
+
         public void Tick()
         {
             if (m_state == State.Inactive) return;
@@ -40,7 +54,7 @@ public partial class Player
             switch (state)
             {
                 case State.Active:
-                    m_hitBox.Activate(OnGrab, null);
+                    m_hitBox.Activate(null, null);
                     break;
 
                 case State.Inactive:
@@ -48,11 +62,6 @@ public partial class Player
                     break;
             }
             m_state = state;
-        }
-
-        private void OnGrab(IGrabbable grabbedObject)
-        {
-            grabbedObject.OnGrab(m_player);
         }
 
         public void DrawGizmos()
