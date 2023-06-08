@@ -8,23 +8,21 @@ using Joeri.Tools.Utilities;
 public partial class Player : Entity
 {
     [Header("Player Properties:")]
-    [SerializeField] private float m_jumpForce = 5f;
-    [Space]
     [SerializeField] private float m_grabTime = 1f;
     [SerializeField] private float m_grabGrip = 1f;
     [Space]
     [SerializeField] private float m_carrySmoothTime = 1f;
     [SerializeField] private float m_throwStrength = 5f;
 
+    [Header("States:")]
+    [SerializeField] private Grabbing.Settings m_grabbing;
+    [SerializeField] private Throwing.Settings m_throwing;
+
     [Header("Player References:")]
-    [SerializeField] private PlayerController m_movement;
-    [SerializeField] private GrabbyHandler m_grabbing;
+    [SerializeField] private GrabbyHandler m_grabHandler;
     [Space]
     [SerializeField] private Transform m_center;
-    [SerializeField] private Transform m_grabber;
-
-    //  Run-time:
-    private FSM m_stateMachine = null;
+    [SerializeField] private Transform m_grabPivot;
 
     //  Cache:
     private Vector2 m_input;
@@ -38,7 +36,7 @@ public partial class Player : Entity
     public float carrySmoothTime { get => m_carrySmoothTime; }
 
     public Transform center { get => m_center; }
-    public Transform grabber { get => m_grabber; }
+    public Transform grabPivot { get => m_grabPivot; }
 
     public Vector3 velocity { get => m_movement.velocity; }
     public Vector2 flatVelocity { get => m_movement.flatVelocity; }
@@ -46,19 +44,22 @@ public partial class Player : Entity
     public float speed { get => m_movement.speed; set => m_movement.speed = value; }
     public float grip { get => m_movement.grip; set => m_movement.grip = value; }
 
+    public PlayerController movement { get => GetMovement<PlayerController>(); }
+
     #endregion
 
     public void Setup()
     {
-        m_grabbing.Setup(this);
+        m_grabHandler.Setup(this);
+        m_movement = new PlayerController(gameObject, m_moveSettings);
         m_stateMachine = new FSM
             (
                 typeof(Walking),
                 new Walking(this),
                 new Falling(this),
                 new Jumping(this),
-                new Grabbing(this),
-                new Throwing(this),
+                new Grabbing(this, m_grabbing),
+                new Throwing(this, m_throwing),
                 new Launched(this)
             );
     }
@@ -74,11 +75,5 @@ public partial class Player : Entity
     public void Launch(float launchPower)
     {
         m_stateMachine.SwitchToState<Launched>().Setup(launchPower);
-    }
-
-    public override void DrawGizmos()
-    {
-        m_stateMachine.DrawGizmos(transform.position + (Vector3.up * (m_movement.controller.height + m_movement.controller.radius)));
-        m_movement.DrawGizmos();
     }
 }

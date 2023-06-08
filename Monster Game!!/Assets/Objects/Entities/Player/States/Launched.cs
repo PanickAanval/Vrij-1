@@ -12,29 +12,29 @@ public partial class Player
     {
         public Launched(Player root) : base(root) { }
 
-        public void Setup(float launcPower)
+        public void Setup(float launchPower)
         {
-            m_root.m_movement.verticalVelocity = launcPower;
+            root.movement.verticalVelocity = launchPower;
         }
 
         public override void OnEnter()
         {
-            m_root.m_movement.grip = m_root.airGrip;
-            m_root.m_movement.gravity = m_root.gravity;
+            root.movement.grip = root.m_moveSettings.airGrip;
+            root.movement.gravity = root.m_moveSettings.baseGravity;
         }
 
         public override void OnTick(float deltaTime)
         {
-            m_root.m_movement.ApplyInput(m_root.m_input, deltaTime);
+            root.movement.ApplyInput(root.m_input, deltaTime);
 
-            if (m_root.m_movement.velocity.y < 0)
+            if (root.movement.velocity.y < 0)
             {
                 SwitchToState<Falling>(); 
                 return; 
             }
-            if (Input.GetKeyDown(KeyCode.Space) && m_root.m_airJumpAvailable)
+            if (Input.GetKeyDown(KeyCode.Space) && root.m_airJumpAvailable)
             {
-                m_root.m_airJumpAvailable = false;
+                root.m_airJumpAvailable = false;
                 SwitchToState(typeof(Jumping));
                 return;
             }

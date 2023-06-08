@@ -15,24 +15,24 @@ public abstract partial class Monster
 
         public void Setup(Vector3 velocity)
         {
-            m_root.m_movement.velocity = velocity;
+            root.movement.velocity = velocity;
         }
 
         public override void OnEnter()
         {
-            m_root.m_movement.grip = 0f;
-            m_root.m_movement.gravity = m_root.gravity;
+            root.movement.grip = 0f;
+            root.movement.gravity = root.m_moveSettings.baseGravity;
         }
 
         public override void OnTick(float deltaTime)
         {
-            if (m_root.m_movement.velocity.y < 0) 
+            if (root.movement.velocity.y < 0) 
             { 
                 SwitchToState(typeof(Falling));
                 return; 
             }
 
-            m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
+            root.movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
         }
     }
 }

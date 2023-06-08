@@ -11,11 +11,32 @@ using Joeri.Tools.Movement;
 public abstract class Entity : MonoBehaviour
 {
     [Header("Properties:")]
-    public float walkSpeed = 8f;
-    public float groundGrip = 8f;
-    [Space]
-    public float airGrip = 5f;
-    public float gravity = -9.81f;
+    [SerializeField] protected ExtendedMovementSettings m_moveSettings;
 
-    public virtual void DrawGizmos() { }
+    //  Run-time:
+    protected MovementBase m_movement = null;
+    protected FSM m_stateMachine = null;
+
+    public virtual void Tick(float deltaTime)
+    {
+        m_stateMachine.Tick(deltaTime);
+    }
+
+    protected T GetMovement<T>() where T : MovementBase
+    {
+        return m_movement as T;
+    }
+
+    public virtual void DrawGizmos()
+    {
+        m_stateMachine.DrawGizmos(transform.position);
+    }
+
+    [System.Serializable]
+    public class ExtendedMovementSettings : MovementBase.Settings
+    {
+        [Space]
+        public float jumpForce;
+        public float airGrip;
+    }
 }

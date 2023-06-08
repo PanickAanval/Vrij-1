@@ -16,19 +16,19 @@ public partial class SpringyFella
 
         public override void OnEnter()
         {
-            m_root.m_movement.SetBehaviors(new Pursue(m_root.m_lookAheadTime, m_root.m_player.transform));
+            root.movement.SetBehaviors(new Pursue(root.m_lookAheadTime, root.m_player.transform));
         }
 
         public override void OnTick(float deltaTime)
         {
-            m_root.m_movement.ApplyBehaviorVelocity(deltaTime);
+            root.movement.ApplyBehaviorVelocity(deltaTime);
 
-            if (!m_root.m_movement.onGround)
+            if (!root.movement.onGround)
             {
                 SwitchToState(typeof(Falling));
                 return;
             }
-            if (Vector3.Distance(m_root.transform.position, m_root.m_player.transform.position) > m_root.m_detectionRange)
+            if (Vector3.Distance(root.transform.position, root.m_player.transform.position) > root.m_detectionRange)
             {
                 SwitchToState(typeof(Idle));
                 return;
@@ -37,12 +37,12 @@ public partial class SpringyFella
 
         public override void OnExit()
         {
-            m_root.m_movement.ClearBehaviors();
+            root.movement.ClearBehaviors();
         }
 
         public override void OnDrawGizmos()
         {
-            GizmoTools.DrawOutlinedDisc(m_root.transform.position, m_root.m_detectionRange, Color.blue, Color.white, 0.1f);
+            GizmoTools.DrawOutlinedDisc(root.transform.position, root.m_detectionRange, Color.blue, Color.white, 0.1f);
         }
     }
 }

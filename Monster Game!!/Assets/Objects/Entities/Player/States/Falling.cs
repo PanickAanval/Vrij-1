@@ -15,22 +15,22 @@ partial class Player
 
         public override void OnEnter()
         {
-            m_root.m_movement.grip = m_root.airGrip;
-            m_root.m_movement.gravity = m_root.gravity;
+            root.movement.grip = root.m_moveSettings.airGrip;
+            root.movement.gravity = root.m_moveSettings.baseGravity;
         }
 
         public override void OnTick(float deltaTime)
         {
-            m_root.m_movement.ApplyInput(m_root.m_input, deltaTime);
+            root.movement.ApplyInput(root.m_input, deltaTime);
 
-            if (m_root.m_movement.onGround) 
+            if (root.movement.onGround) 
             { 
                 OnLand(); 
                 return; 
             }
-            if (Input.GetKeyDown(KeyCode.Space) && m_root.m_airJumpAvailable)
+            if (Input.GetKeyDown(KeyCode.Space) && root.m_airJumpAvailable)
             {
-                m_root.m_airJumpAvailable = false;
+                root.m_airJumpAvailable = false;
                 SwitchToState(typeof(Jumping));
                 return;
             }
@@ -38,11 +38,11 @@ partial class Player
 
         private void OnLand()
         {
-            m_root.m_airJumpAvailable = true;   //  Testing purposes :))))
+            root.m_airJumpAvailable = true;   //  Testing purposes :))))
 
             //  Return to walking if the ground does not have any special logic.
             //  Ideally we would want to know if any piece of ground inherits from the IStandable interface, but I have yet to figure out how.
-            if (!m_root.m_movement.groundInfo.Contains(out SpringyFella[] components))
+            if (!root.movement.groundInfo.Contains(out SpringyFella[] components))
             {
                 SwitchToState<Walking>();
                 return;
@@ -51,7 +51,7 @@ partial class Player
             //  If it does, execute their logic.
             for (int i = 0; i < components.Length; i++)
             {
-                components[i].OnStand(m_root);
+                components[i].OnStand(root);
                 return;
             }
         }

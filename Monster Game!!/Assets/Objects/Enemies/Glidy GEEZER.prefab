@@ -46,19 +46,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 628c540faf78a4c4586c692d251e3412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 8
-  groundGrip: 8
-  airGrip: 0
-  gravity: -3
-  m_movement:
-    rotate: 1
-    speed: 10
-    grip: 5
-    m_controller: {fileID: 5940250761479653742}
-    m_movementLayer:
+  m_moveSettings:
+    baseSpeed: 0
+    baseGrip: 8
+    baseGravity: -3
+    baseRotationTime: 0
+    movementMask:
       serializedVersion: 2
-      m_Bits: 55
-  m_jumpForce: 4
+      m_Bits: 63
+    jumpForce: 4
+    airGrip: 0
   m_rotationTime: 2
   m_rotateAmount: 180
 --- !u!143 &5940250761479653742

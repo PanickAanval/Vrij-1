@@ -14,29 +14,34 @@ partial class Player
     {
         private Timer m_timer = null;
 
-        public Grabbing(Player root) : base(root) { }
+        public Settings settings { get => GetSettings<Settings>(); }
+
+        public Grabbing(Player root, Settings settings) : base(root, settings) { }
+
+        public void Setup(Vector2 dir)
+        {
+            root.movement.flatVelocity = dir * settings.speed;
+        }
 
         public override void OnEnter()
         {
-            m_timer = new Timer(m_root.m_grabTime);
-            m_root.m_grabbing.SetState(GrabbyHandler.State.Active);
-            m_root.m_movement.grip = m_root.m_grabGrip;
+            m_timer = new Timer(settings.time);
+            root.m_grabHandler.SetState(GrabbyHandler.State.Active);
         }
 
         public override void OnTick(float deltaTime)
         {
-            m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
-            m_root.m_grabbing.Tick();
-            m_root.m_movement.grip = Mathf.Lerp(m_root.m_grabGrip, m_root.groundGrip, m_timer.percent);
+            root.movement.ApplyDrag(settings.drag, deltaTime);
+            root.m_grabHandler.Tick();
 
-            if (m_root.m_grabbing.CaughtSomething(out IGrabbable caughtItem))
+            if (root.m_grabHandler.CaughtSomething(out IGrabbable caughtItem))
             {
-                caughtItem.OnGrab(m_root);
-                m_root.m_grabbingItem = caughtItem;
-                m_root.m_grabbing.SetState(GrabbyHandler.State.Inactive);
+                caughtItem.OnGrab(root);
+                root.m_grabbingItem = caughtItem;
+                root.m_grabHandler.SetState(GrabbyHandler.State.Inactive);
             }
 
-            if (!m_root.m_movement.onGround)
+            if (!root.movement.onGround)
             {
                 SwitchToState(typeof(Falling));
                 return;
@@ -51,12 +56,21 @@ partial class Player
 
         public override void OnExit()
         {
-            m_root.m_grabbing.SetState(GrabbyHandler.State.Inactive);
+            root.m_grabHandler.SetState(GrabbyHandler.State.Inactive);
+            m_timer = null;
         }
 
         public override void OnDrawGizmos()
         {
-            m_root.m_grabbing.DrawGizmos();
+            root.m_grabHandler.DrawGizmos();
+        }
+
+        [System.Serializable]
+        public class Settings : FlexState<Player>.Settings
+        {
+            public float speed;
+            public float drag;
+            public float time;
         }
     }
 }

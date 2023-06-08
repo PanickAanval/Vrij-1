@@ -25,7 +25,7 @@ public partial class Player
         public void Setup(Player parent)
         {
             m_player = parent;
-            m_handBone = parent.m_grabber;
+            m_handBone = parent.m_grabPivot;
             m_hitBox = new Overlapper<IGrabbable>(m_radius, m_mask);
         }
 

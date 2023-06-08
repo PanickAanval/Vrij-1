@@ -15,23 +15,22 @@ public partial class SpringyFella
 
         public override void OnEnter()
         {
-            m_root.m_movement.speed = m_root.walkSpeed;
-            m_root.m_movement.grip = m_root.groundGrip;
-
-            m_root.m_movement.gravity = 0f;
-            m_root.m_movement.verticalVelocity = 0f;
+            root.movement.speed = root.m_moveSettings.baseSpeed;
+            root.movement.grip = root.m_moveSettings.baseGrip;
+            root.movement.gravity = 0f;
+            root.movement.verticalVelocity = 0f;
         }
 
         public override void OnTick(float deltaTime)
         {
-            m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
+            root.movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
 
-            if (!m_root.m_movement.onGround)
+            if (!root.movement.onGround)
             {
                 SwitchToState(typeof(Falling));
                 return;
             }
-            if (Vector3.Distance(m_root.transform.position, m_root.m_player.transform.position) < m_root.m_detectionRange)
+            if (Vector3.Distance(root.transform.position, root.m_player.transform.position) < root.m_detectionRange)
             {
                 SwitchToState(typeof(Follow));
                 return;
@@ -40,7 +39,7 @@ public partial class SpringyFella
 
         public override void OnDrawGizmos()
         {
-            GizmoTools.DrawOutlinedDisc(m_root.transform.position, m_root.m_detectionRange, Color.red, Color.white, 0.25f);
+            GizmoTools.DrawOutlinedDisc(root.transform.position, root.m_detectionRange, Color.red, Color.white, 0.25f);
         }
     }
 }

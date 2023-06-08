@@ -21,19 +21,19 @@ public partial class Monster
 
         public override void OnEnter()
         {
-            m_root.m_movement.grip = m_root.airGrip;
-            m_root.m_movement.gravity = m_root.gravity;
+            root.movement.grip = root.m_moveSettings.airGrip;
+            root.movement.gravity = root.m_moveSettings.baseGravity;
         }
 
         public override void OnTick(float deltaTime)
         {
-            if (m_root.m_movement.onGround)
+            if (root.movement.onGround)
             {
                 SwitchToState(m_returnState);
                 return;
             }
 
-            m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
+            root.movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
         }
     }
 }

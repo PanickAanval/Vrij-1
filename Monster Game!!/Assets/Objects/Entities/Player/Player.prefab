@@ -292,29 +292,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ef3e150906fb54c9e542b7755afb92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_walkSpeed: 8
-  m_groundGrip: 8
-  m_airGrip: 5
-  m_gravity: -9.81
-  m_jumpForce: 5
+  m_moveSettings:
+    baseSpeed: 8
+    baseGrip: 8
+    baseGravity: -9.81
+    baseRotationTime: 0.05
+    movementMask:
+      serializedVersion: 2
+      m_Bits: 119
+    jumpForce: 5
+    airGrip: 3
   m_grabTime: 0.25
   m_grabGrip: 1
   m_carrySmoothTime: 0.05
   m_throwStrength: 15
-  m_movement:
-    speed: 8
-    grip: 8
-    m_controller: {fileID: 5217814554882684088}
-    m_movementLayer:
-      serializedVersion: 2
-      m_Bits: 119
   m_grabbing:
+    speed: 15
+    drag: 10
+    time: 0.25
+  m_throwing:
+    strength: 5
+    drag: 15
+    time: 0.15
+  m_grabHandler:
     m_radius: 1
     m_mask:
       serializedVersion: 2
       m_Bits: 64
   m_center: {fileID: 8186770591459460797}
-  m_grabber: {fileID: 6770951891262812478}
+  m_grabPivot: {fileID: 6770951891262812478}
 --- !u!143 &5217814554882684088
 CharacterController:
   m_ObjectHideFlags: 0

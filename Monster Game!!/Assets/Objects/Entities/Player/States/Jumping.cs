@@ -15,23 +15,23 @@ partial class Player
 
         public override void OnEnter()
         {
-            m_root.m_movement.grip = m_root.airGrip;
-            m_root.m_movement.gravity = m_root.gravity;
-            m_root.m_movement.verticalVelocity = m_root.m_jumpForce;
+            root.movement.grip = root.m_moveSettings.airGrip;
+            root.movement.gravity = root.m_moveSettings.baseGravity;
+            root.movement.verticalVelocity = root.m_moveSettings.jumpForce;
         }
 
         public override void OnTick(float deltaTime)
         {
-            m_root.m_movement.ApplyInput(m_root.m_input, deltaTime);
+            root.movement.ApplyInput(root.m_input, deltaTime);
 
-            if (m_root.m_movement.velocity.y < 0)
+            if (root.movement.velocity.y < 0)
             { 
                 SwitchToState(typeof(Falling)); 
                 return; 
             }
-            if (Input.GetKeyDown(KeyCode.Space) && m_root.m_airJumpAvailable)
+            if (Input.GetKeyDown(KeyCode.Space) && root.m_airJumpAvailable)
             {
-                m_root.m_airJumpAvailable = false;
+                root.m_airJumpAvailable = false;
                 SwitchToState(typeof(Jumping));
                 return;
             }

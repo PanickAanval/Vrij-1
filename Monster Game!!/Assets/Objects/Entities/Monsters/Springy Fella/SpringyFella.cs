@@ -14,9 +14,6 @@ public partial class SpringyFella : Monster, IStandable
     [Space]
     [SerializeField] private float m_stunnedTime = 0.5f;
 
-    //  Run-time:
-    private FSM m_stateMachine = null;
-
     public override void Setup(Player player)
     {
         base.Setup(player);
@@ -32,11 +29,6 @@ public partial class SpringyFella : Monster, IStandable
             );
     }
 
-    public override void Tick(float deltaTime)
-    {
-        m_stateMachine.Tick(deltaTime);
-    }
-
     public void OnStand(Entity entity)
     {
         if (entity.GetType() != typeof(Player)) return;
@@ -48,18 +40,12 @@ public partial class SpringyFella : Monster, IStandable
 
     public override void OnGrab(Player player)
     {
-        m_stateMachine.SwitchToState<PickedUp>().Setup(player.carrySmoothTime, player.grabber);
+        m_stateMachine.SwitchToState<PickedUp>().Setup(player.carrySmoothTime, player.grabPivot);
     }
 
     public override void OnRelease(Player player, Vector3 releaseVelocity)
     {
         m_stateMachine.SwitchToState<Thrown>().Setup(releaseVelocity);
-    }
-
-    public override void DrawGizmos()
-    {
-        m_stateMachine.DrawGizmos(transform.position);
-        base.DrawGizmos();
     }
 }
 

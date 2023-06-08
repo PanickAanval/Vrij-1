@@ -15,23 +15,22 @@ partial class Player
         private Timer m_timer = null;
         private IGrabbable m_grabbingItem = null;
 
-        public Throwing(Player root) : base(root) { }
+        public Settings settings { get => GetSettings<Settings>(); }
+
+        public Throwing(Player root, Settings settings) : base(root, settings) { }
 
         public override void OnEnter()
         {
-            m_timer = new Timer(m_root.m_grabTime);
-            m_root.m_grabbingItem.OnRelease(m_root, m_root.transform.forward * m_root.m_throwStrength);
-            m_root.m_grabbingItem = null;
-
-            m_root.m_movement.grip = m_root.m_grabGrip;
+            m_timer = new Timer(settings.time);
+            root.m_grabbingItem.OnRelease(root, root.transform.forward * settings.strength);
+            root.m_grabbingItem = null;
         }
 
         public override void OnTick(float deltaTime)
         {
-            m_root.m_movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
-            m_root.m_movement.grip = Mathf.Lerp(m_root.m_grabGrip, m_root.groundGrip, m_timer.percent);
+            root.movement.ApplyDrag(settings.drag, deltaTime);
 
-            if (!m_root.m_movement.onGround)
+            if (!root.movement.onGround)
             {
                 SwitchToState(typeof(Falling));
                 return;
@@ -41,6 +40,19 @@ partial class Player
                 SwitchToState(typeof(Walking));
                 return;
             }
+        }
+
+        public override void OnExit()
+        {
+            m_timer = null;
+        }
+
+        [System.Serializable]
+        public class Settings : FlexState<Player>.Settings
+        {
+            public float strength;
+            public float drag;
+            public float time;
         }
     }
 }
