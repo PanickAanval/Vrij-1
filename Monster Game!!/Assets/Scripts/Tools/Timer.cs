@@ -23,8 +23,17 @@ namespace Joeri.Tools
         {
             Add(deltaTime);
             if (timer < time) return false;
-            Reset();
             return true;
+        }
+
+        public bool ResetOnReach(float deltaTime)
+        {
+            if (HasReached(deltaTime))
+            {
+                Reset();
+                return true;
+            }
+            return false;
         }
 
         public float Add(float amount)

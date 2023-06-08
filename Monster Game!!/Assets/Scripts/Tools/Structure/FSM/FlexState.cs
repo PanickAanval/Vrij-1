@@ -12,20 +12,20 @@ namespace Joeri.Tools.Structure
         /// <summary>
         /// The settings of the state, as an abstract settings interface.
         /// </summary>
-        protected ISettings m_settings { get; private set; }
+        private Settings settings { get; set; }
 
         /// <summary>
         /// The root class that the state machine is harbored in.
         /// </summary>
-        protected Root m_root { get; private set; }
+        protected Root root { get; private set; }
 
         /// <summary>
         /// Create a new state, and pass in the state's settings.
         /// </summary>
-        public FlexState(Root root, ISettings settings)
+        public FlexState(Root root, Settings settings)
         {
-            m_root = root;
-            m_settings = settings;
+            this.root = root;
+            this.settings = settings;
         }
 
         /// <summary>
@@ -33,18 +33,24 @@ namespace Joeri.Tools.Structure
         /// </summary>
         public FlexState(Root root)
         {
-            m_root = root;
-            m_settings = null;
+            this.root = root;
+            settings = null;
         }
 
         /// <summary>
         /// Switches to another state using a generic variable.
         /// </summary>
-        protected State SwitchToState<State>() where State : FlexState<Root>
+        protected T SwitchToState<T>() where T : FlexState<Root>
         {
-            return machine.SwitchToState<State>();
+            return machine.SwitchToState<T>();
         }
 
-        public interface ISettings { }
+        /// <returns>The state's settings class casted as a settings sub-class.</returns>
+        protected T GetSettings<T>() where T : Settings
+        {
+            return settings as T;
+        }
+
+        public abstract class Settings { }
     }
 }

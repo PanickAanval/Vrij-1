@@ -19,7 +19,13 @@ namespace Joeri.Tools
         private event Action<Target> m_onEnter = null;
         private event Action<Target> m_onStay = null;
 
+        #region Properties
+
+        public bool active { get => m_active; }
+
         public Dictionary<int, Target> caughtTargets { get => m_caughtTargets; }
+
+        #endregion
 
         public Overlapper(float radius, LayerMask mask)
         {
@@ -70,7 +76,7 @@ namespace Joeri.Tools
                 //  Move to next iteration if the caught collider does not have the desired component.
                 if (!colliders[i].TryGetComponent(out Target target)) continue;
 
-                //  If the caught collider does have the desired component, and is already present in the dictionary, cal OnStay(...).
+                //  If the caught collider does have the desired component, and is already present in the dictionary, call OnStay(...).
                 if (m_caughtTargets.ContainsKey(target.GetHashCode()))
                 {
                     m_onStay?.Invoke(target);

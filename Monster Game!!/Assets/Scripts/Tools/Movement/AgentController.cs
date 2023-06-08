@@ -8,10 +8,11 @@ using Joeri.Tools.Utilities;
 
 namespace Joeri.Tools.Movement
 {
-    [System.Serializable]
     public class AgentController : MovementBase
     {
-        BehaviorHandler m_behaviorHandler = new BehaviorHandler();
+        private BehaviorHandler m_behaviorHandler = new BehaviorHandler();
+
+        public AgentController(GameObject root, Settings settings) : base(root, settings) { }
 
         /// <summary>
         /// Apply the passed in behaviors to the controller's behavior handler.

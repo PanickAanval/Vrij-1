@@ -40,6 +40,15 @@ namespace Joeri.Tools.Movement
             }
 
             /// <summary>
+            /// Overload for CalculateVelocity(...) in which the velocity is calculated based on uncontrolled physics.
+            /// </summary>
+            public Vector2 CalculateVelocity(float drag, float deltaTime)
+            {
+                velocity = Vector2.ClampMagnitude(velocity, velocity.magnitude - drag * deltaTime);
+                return velocity;
+            }
+
+            /// <summary>
             /// Draws the acceleration class as two flat rays.
             /// </summary>
             public void Draw(Vector3 position, Color velocityColor, Color steeringColor, float opacity = 1f)
