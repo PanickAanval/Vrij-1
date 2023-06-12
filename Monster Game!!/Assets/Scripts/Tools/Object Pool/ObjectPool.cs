@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Joeri.Tools.ObjectPool
 {
-    public class ObjectPool<T> where T : MonoBehaviour
+    public class ObjectPool<T> where T : MonoBehaviour, IPoolItem
     {
         public readonly Transform root      = null;
         public readonly Transform parent    = null;
@@ -60,6 +60,7 @@ namespace Joeri.Tools.ObjectPool
             itemSpawned.transform.parent    = parent;
             itemSpawned.transform.position  = position;
             itemSpawned.transform.rotation  = rotation;
+            itemSpawned.OnSpawn();
 
             m_activeItems.Add(itemSpawned);
 
@@ -73,6 +74,7 @@ namespace Joeri.Tools.ObjectPool
         {
             m_activeItems.Remove(item);
 
+            item.OnDespawn();
             item.transform.parent   = parent;
             item.transform.position = Vector3.zero;
             item.transform.rotation = Quaternion.identity;
@@ -98,6 +100,9 @@ namespace Joeri.Tools.ObjectPool
                     Debug.LogError("Assigned item for object pool does not match the class' generic type.", parent);
                     return;
                 }
+
+                //  Call the OnCreate() function, to initialize a script for example.
+                component.OnCreate();
 
                 //  Deactivate the game object, and add to the list.
                 component.gameObject.SetActive(false);
