@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInstance : MonoBehaviour
+public partial class PlayerInstance : MonoBehaviour
 {
-    [SerializeField] private Camera m_camera;
     [SerializeField] private Player m_player;
+    [SerializeField] private Camera m_camera;
+    [SerializeField] private PlayerShadow m_shadow;
 
     public Player player { get => m_player; }
 
     public void Setup()
     {
-        m_camera.Setup(m_player.center);
         m_player.Setup();
+        m_camera.Setup(m_player.center);
+        m_shadow.Setup(player.controller);
     }
 
     public void Tick(float deltaTime)
@@ -31,6 +33,7 @@ public class PlayerInstance : MonoBehaviour
 
         m_player.Tick(leftInput.normalized, deltaTime, -m_camera.transform.eulerAngles.y);
         m_camera.Tick(-rightInput, m_player.flatVelocity, deltaTime);
+        m_shadow.Tick(m_player.transform.position);
     }
 
     public void DrawGizmos()

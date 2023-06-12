@@ -38,6 +38,8 @@ public partial class Player : Entity
     public Transform center { get => m_center; }
     public Transform grabPivot { get => m_grabPivot; }
 
+    public CharacterController controller { get => m_movement.controller; }
+
     public Vector3 velocity { get => m_movement.velocity; }
     public Vector2 flatVelocity { get => m_movement.flatVelocity; }
 
