@@ -21,7 +21,12 @@ ModelImporter:
   - first:
       74: 8459799734068797329
     second: Glidey Rig|WalkStart
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: eye
+    second: {fileID: 2100000, guid: a1b6a1510cf671a449cd126c88bd25bf, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
