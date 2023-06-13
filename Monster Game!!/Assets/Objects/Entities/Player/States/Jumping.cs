@@ -18,6 +18,8 @@ partial class Player
             root.movement.grip = root.m_moveSettings.airGrip;
             root.movement.gravity = root.m_moveSettings.baseGravity;
             root.movement.verticalVelocity = root.m_moveSettings.jumpForce;
+
+            root.SwitchAnimation(root.m_animations.startJump);
         }
 
         public override void OnTick(float deltaTime)
@@ -25,7 +27,7 @@ partial class Player
             root.movement.ApplyInput(root.m_input, deltaTime);
 
             if (root.movement.velocity.y < 0)
-            { 
+            {
                 SwitchToState(typeof(Falling)); 
                 return; 
             }

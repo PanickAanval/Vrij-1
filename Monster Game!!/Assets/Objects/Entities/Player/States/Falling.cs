@@ -17,6 +17,8 @@ partial class Player
         {
             root.movement.grip = root.m_moveSettings.airGrip;
             root.movement.gravity = root.m_moveSettings.baseGravity;
+
+            root.SwitchAnimation(root.m_animations.falling);
         }
 
         public override void OnTick(float deltaTime)
@@ -45,6 +47,7 @@ partial class Player
             //  Ideally we would want to know if any piece of ground inherits from the IStandable interface, but I have yet to figure out how.
             if (!root.movement.groundInfo.Contains(out SpringyFella[] components))
             {
+                root.SwitchAnimation(root.m_animations.jumpLand);
                 SwitchToState<Walking>();
                 return;
             }

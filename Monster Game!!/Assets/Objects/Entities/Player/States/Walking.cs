@@ -10,6 +10,8 @@ partial class Player
 {
     public class Walking : FlexState<Player>
     {
+        private State m_state = State.Idle;
+
         public Walking(Player root) : base(root) { }
 
         public override void OnEnter()
@@ -21,7 +23,26 @@ partial class Player
         }
 
         public override void OnTick(float deltaTime)
-        {
+        {   
+            switch (m_state)
+            {
+                case State.Idle:
+                    if (root.m_input != Vector2.zero)
+                    {
+                        root.SwitchAnimation(root.m_animations.startRun);
+                        m_state = State.Running;
+                    }
+                    break;
+
+                case State.Running:
+                    if (root.m_input == Vector2.zero)
+                    {
+                        root.SwitchAnimation(root.m_animations.endRun, 0.15f);
+                        m_state = State.Idle;
+                    }
+                    break;
+            }
+
             root.movement.ApplyInput(root.m_input, deltaTime);
 
             if (!root.movement.onGround)
@@ -45,5 +66,12 @@ partial class Player
                 return;
             }
         }
+
+        public override void OnExit()
+        {
+            m_state = State.Idle;
+        }
+
+        private enum State { Idle, Running }
     }
 }

@@ -10,8 +10,11 @@ using Joeri.Tools.Movement;
 
 public abstract class Entity : MonoBehaviour
 {
-    [Header("Properties:")]
+    [Header("Entity Properties:")]
     [SerializeField] protected ExtendedMovementSettings m_moveSettings;
+
+    [Header("Entity References:")]
+    [SerializeField] protected Animator m_animator;
 
     #region Properties
 
@@ -22,6 +25,11 @@ public abstract class Entity : MonoBehaviour
     //  Run-time:
     protected MovementBase m_movement   = null;
     protected FSM m_stateMachine        = null;
+
+    public void SwitchAnimation(AnimationClip animation, float time = 0)
+    {
+        m_animator.CrossFadeInFixedTime(animation.name, time);
+    }
 
     public virtual void Tick(float deltaTime)
     {

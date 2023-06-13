@@ -10,6 +10,8 @@ public partial class Player : Entity
     [Header("States:")]
     [SerializeField] private Grabbing.Settings m_grabbing;
     [SerializeField] private Throwing.Settings m_throwing;
+    [Space]
+    [SerializeField] private AnimationSettings m_animations;
 
     [Header("Player References:")]
     [SerializeField] private GrabbyHandler m_grabHandler;
@@ -69,5 +71,18 @@ public partial class Player : Entity
     public void Launch(float launchPower)
     {
         m_stateMachine.SwitchToState<Launched>().Setup(launchPower);
+    }
+
+    [System.Serializable]
+    public class AnimationSettings
+    {
+        public AnimationClip idle;
+        [Space]
+        public AnimationClip startJump;
+        public AnimationClip falling;
+        public AnimationClip jumpLand;
+        [Space]
+        public AnimationClip startRun;
+        public AnimationClip endRun;
     }
 }
