@@ -7,13 +7,6 @@ using Joeri.Tools.Utilities;
 
 public partial class Player : Entity
 {
-    [Header("Player Properties:")]
-    [SerializeField] private float m_grabTime = 1f;
-    [SerializeField] private float m_grabGrip = 1f;
-    [Space]
-    [SerializeField] private float m_carrySmoothTime = 1f;
-    [SerializeField] private float m_throwStrength = 5f;
-
     [Header("States:")]
     [SerializeField] private Grabbing.Settings m_grabbing;
     [SerializeField] private Throwing.Settings m_throwing;
@@ -22,7 +15,6 @@ public partial class Player : Entity
     [SerializeField] private GrabbyHandler m_grabHandler;
     [Space]
     [SerializeField] private Transform m_center;
-    [SerializeField] private Transform m_grabPivot;
 
     //  Cache:
     private Vector2 m_input;
@@ -33,10 +25,7 @@ public partial class Player : Entity
 
     #region Properties
 
-    public float carrySmoothTime { get => m_carrySmoothTime; }
-
     public Transform center { get => m_center; }
-    public Transform grabPivot { get => m_grabPivot; }
 
     public CharacterController controller { get => m_movement.controller; }
 
@@ -48,11 +37,14 @@ public partial class Player : Entity
 
     public PlayerController movement { get => GetMovement<PlayerController>(); }
 
+    public float carrySmoothTime { get => m_grabHandler.m_carrySmoothTime; }
+    public Transform grabPivot { get => m_grabHandler.grabPivot; }
+
     #endregion
 
     public void Setup()
     {
-        m_grabHandler.Setup(this);
+        m_grabHandler.Setup();
         m_movement = new PlayerController(gameObject, m_moveSettings);
         m_stateMachine = new FSM
             (

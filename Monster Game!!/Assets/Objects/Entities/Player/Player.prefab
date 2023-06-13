@@ -302,10 +302,7 @@ MonoBehaviour:
       m_Bits: 119
     jumpForce: 5
     airGrip: 3
-  m_grabTime: 0.25
-  m_grabGrip: 1
-  m_carrySmoothTime: 0.05
-  m_throwStrength: 15
+    fallDrag: 0
   m_grabbing:
     speed: 15
     drag: 10
@@ -315,12 +312,13 @@ MonoBehaviour:
     drag: 15
     time: 0.15
   m_grabHandler:
-    m_radius: 1
-    m_mask:
+    radius: 1
+    mask:
       serializedVersion: 2
       m_Bits: 64
+    m_carrySmoothTime: 0.05
+    grabPivot: {fileID: 6770951891262812478}
   m_center: {fileID: 8186770591459460797}
-  m_grabPivot: {fileID: 6770951891262812478}
 --- !u!143 &5217814554882684088
 CharacterController:
   m_ObjectHideFlags: 0

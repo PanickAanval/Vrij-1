@@ -13,9 +13,15 @@ public abstract class Entity : MonoBehaviour
     [Header("Properties:")]
     [SerializeField] protected ExtendedMovementSettings m_moveSettings;
 
+    #region Properties
+
+    public ExtendedMovementSettings moveSettings { get => m_moveSettings; }
+
+    #endregion
+
     //  Run-time:
-    protected MovementBase m_movement = null;
-    protected FSM m_stateMachine = null;
+    protected MovementBase m_movement   = null;
+    protected FSM m_stateMachine        = null;
 
     public virtual void Tick(float deltaTime)
     {
@@ -38,5 +44,6 @@ public abstract class Entity : MonoBehaviour
         [Space]
         public float jumpForce;
         public float airGrip;
+        public float fallDrag;
     }
 }

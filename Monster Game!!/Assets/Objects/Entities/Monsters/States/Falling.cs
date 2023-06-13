@@ -33,6 +33,7 @@ public partial class Monster
                 return;
             }
 
+            root.movement.verticalVelocity += root.m_moveSettings.fallDrag * deltaTime;
             root.movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
         }
     }

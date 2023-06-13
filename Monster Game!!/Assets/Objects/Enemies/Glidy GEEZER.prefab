@@ -49,13 +49,14 @@ MonoBehaviour:
   m_moveSettings:
     baseSpeed: 0
     baseGrip: 8
-    baseGravity: -3
+    baseGravity: -7.5
     baseRotationTime: 0
     movementMask:
       serializedVersion: 2
       m_Bits: 63
     jumpForce: 4
     airGrip: 0
+    fallDrag: 5
   m_rotationTime: 2
   m_rotateAmount: 180
 --- !u!143 &5940250761479653742

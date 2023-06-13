@@ -11,22 +11,21 @@ public partial class Player
     [System.Serializable]
     public class GrabbyHandler
     {
-        [SerializeField] private float m_radius = 1f;
-        [SerializeField] private LayerMask m_mask;
+        [Header("Grabbing:")]
+        public float radius = 1f;
+        public LayerMask mask;
+
+        [Header("Carrying:")]
+        public float m_carrySmoothTime = 1f;
+        public Transform grabPivot;
 
         //  Run-time:
         private Overlapper<IGrabbable> m_hitBox = null;
         private State m_state = State.Inactive;
 
-        //  Reference:
-        private Player m_player = null;
-        private Transform m_handBone = null;
-
-        public void Setup(Player parent)
+        public void Setup()
         {
-            m_player = parent;
-            m_handBone = parent.m_grabPivot;
-            m_hitBox = new Overlapper<IGrabbable>(m_radius, m_mask);
+            m_hitBox = new Overlapper<IGrabbable>(radius, mask);
         }
 
         public bool CaughtSomething(out IGrabbable caughtItem)
@@ -46,7 +45,7 @@ public partial class Player
         public void Tick()
         {
             if (m_state == State.Inactive) return;
-            m_hitBox.Overlap(m_handBone.position);
+            m_hitBox.Overlap(grabPivot.position);
         }
 
         public void SetState(State state)
@@ -66,7 +65,7 @@ public partial class Player
 
         public void DrawGizmos()
         {
-            m_hitBox.DrawGizmos(m_handBone.position, Color.red);
+            m_hitBox.DrawGizmos(grabPivot.position, Color.red);
         }
 
         public enum State { Active, Inactive }
