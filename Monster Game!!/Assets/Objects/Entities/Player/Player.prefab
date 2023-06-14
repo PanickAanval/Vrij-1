@@ -113,12 +113,12 @@ MonoBehaviour:
   m_moveSettings:
     baseSpeed: 8
     baseGrip: 8
-    baseGravity: -9.81
+    baseGravity: -10
     baseRotationTime: 0.05
     movementMask:
       serializedVersion: 2
       m_Bits: 119
-    jumpForce: 5
+    jumpForce: 8
     airGrip: 3
     fallDrag: 0
   m_animator: {fileID: 6957116355900542394}
@@ -131,9 +131,9 @@ MonoBehaviour:
     drag: 15
     time: 0.15
   m_dashing:
-    distance: 3
-    time: 0.1
-    exitSpeed: 5
+    distance: 5
+    time: 0.3
+    exitSpeed: 8
   m_animations:
     idle: {fileID: -8945691123924629249, guid: cc5e6b80fd5c27642b81ee10672c5d71, type: 3}
     startJump: {fileID: 5277777409621656941, guid: cc5e6b80fd5c27642b81ee10672c5d71,
