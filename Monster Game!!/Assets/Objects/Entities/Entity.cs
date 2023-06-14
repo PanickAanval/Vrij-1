@@ -28,6 +28,11 @@ public abstract class Entity : MonoBehaviour
 
     public void SwitchAnimation(AnimationClip animation, float time = 0)
     {
+        if (animation == null)
+        {
+            Debug.LogWarning($"Animation not found within entity's properties.", gameObject);
+            return;
+        }
         m_animator.CrossFadeInFixedTime(animation.name, time);
     }
 

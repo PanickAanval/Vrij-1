@@ -26,22 +26,29 @@ partial class Player
             root.movement.verticalVelocity += root.m_moveSettings.fallDrag * deltaTime;
             root.movement.ApplyInput(root.m_input, deltaTime);
 
-            if (root.movement.onGround) 
-            { 
-                OnLand(); 
-                return; 
-            }
             if (Input.GetKeyDown(KeyCode.Space) && root.m_airJumpAvailable)
             {
                 root.m_airJumpAvailable = false;
                 SwitchToState(typeof(Jumping));
                 return;
             }
+            if (Input.GetKeyDown(KeyCode.LeftShift) && root.m_airDashAvailable)
+            {
+                root.m_airDashAvailable = false;
+                SwitchToState<Dashing>().Setup(root.m_input);
+                return;
+            }
+            if (root.movement.onGround)
+            {
+                OnLand();
+                return;
+            }
         }
 
         private void OnLand()
         {
-            root.m_airJumpAvailable = true;   //  Testing purposes :))))
+            root.m_airJumpAvailable = true;
+            root.m_airDashAvailable = true;
 
             //  Return to walking if the ground does not have any special logic.
             //  Ideally we would want to know if any piece of ground inherits from the IStandable interface, but I have yet to figure out how.

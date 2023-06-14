@@ -45,14 +45,19 @@ partial class Player
 
             root.movement.ApplyInput(root.m_input, deltaTime);
 
-            if (!root.movement.onGround)
-            {
-                SwitchToState(typeof(Falling));
-                return;
-            }
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 SwitchToState(typeof(Jumping));
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                SwitchToState<Dashing>().Setup(root.m_input);
+                return;
+            }
+            if (!root.movement.onGround)
+            {
+                SwitchToState(typeof(Falling));
                 return;
             }
             if (Input.GetKeyDown(KeyCode.F))

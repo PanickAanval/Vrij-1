@@ -130,6 +130,10 @@ MonoBehaviour:
     strength: 5
     drag: 15
     time: 0.15
+  m_dashing:
+    distance: 3
+    time: 0.1
+    exitSpeed: 5
   m_animations:
     idle: {fileID: -8945691123924629249, guid: cc5e6b80fd5c27642b81ee10672c5d71, type: 3}
     startJump: {fileID: 5277777409621656941, guid: cc5e6b80fd5c27642b81ee10672c5d71,
@@ -142,6 +146,7 @@ MonoBehaviour:
       type: 3}
     endRun: {fileID: -1339833477917704532, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
+    dash: {fileID: -2246502780319343731, guid: cc5e6b80fd5c27642b81ee10672c5d71, type: 3}
   m_grabHandler:
     radius: 1
     mask:

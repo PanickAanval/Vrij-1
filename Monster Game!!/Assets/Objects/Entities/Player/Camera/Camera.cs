@@ -29,6 +29,9 @@ public class Camera : MonoBehaviour
     //  References:
     private Transform m_target = null;
 
+    //  Events:
+    public event CameraOverride onPosOver = null;
+
     public void Setup(Transform target)
     {
         var offsetFromTarget = transform.position - target.position;
@@ -42,7 +45,11 @@ public class Camera : MonoBehaviour
 
     public void Tick(Vector2 input, Vector2 playerVel, float deltaTime)
     {
+        //  Position:
         transform.position = GetDesiredPosition(input, playerVel, deltaTime);
+        if (onPosOver != null) transform.position = onPosOver.Invoke(transform.position);
+
+        //  Rotation:
         transform.rotation = Quaternion.LookRotation(m_target.position - transform.position, Vector3.up);
     }
 
@@ -115,4 +122,6 @@ public class Camera : MonoBehaviour
         if (m_target == null) return;
         GizmoTools.DrawSphere(m_orbitCenter, m_orbit.distance, Color.white, 0.5f, true, 0.1f);
     }
+
+    public delegate Vector3 CameraOverride(Vector3 position);
 }

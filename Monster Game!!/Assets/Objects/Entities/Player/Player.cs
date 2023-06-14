@@ -10,6 +10,7 @@ public partial class Player : Entity
     [Header("States:")]
     [SerializeField] private Grabbing.Settings m_grabbing;
     [SerializeField] private Throwing.Settings m_throwing;
+    [SerializeField] private Dashing.Settings m_dashing;
     [Space]
     [SerializeField] private AnimationSettings m_animations;
 
@@ -24,23 +25,24 @@ public partial class Player : Entity
     //  TESTING PURPOSES:
     private IGrabbable m_grabbingItem = null;
     private bool m_airJumpAvailable = true;
+    private bool m_airDashAvailable = true;
 
     #region Properties
 
-    public Transform center { get => m_center; }
+    public Transform center                 { get => m_center; }
 
-    public CharacterController controller { get => m_movement.controller; }
+    public CharacterController controller   { get => m_movement.controller; }
 
-    public Vector3 velocity { get => m_movement.velocity; }
-    public Vector2 flatVelocity { get => m_movement.flatVelocity; }
+    public Vector3 velocity                 { get => m_movement.velocity; set => m_movement.velocity = value; }
+    public Vector2 flatVelocity             { get => m_movement.flatVelocity; set => m_movement.flatVelocity = value; }
 
-    public float speed { get => m_movement.speed; set => m_movement.speed = value; }
-    public float grip { get => m_movement.grip; set => m_movement.grip = value; }
+    public float speed                      { get => m_movement.speed; set => m_movement.speed = value; }
+    public float grip                       { get => m_movement.grip; set => m_movement.grip = value; }
 
-    public PlayerController movement { get => GetMovement<PlayerController>(); }
+    public PlayerController movement        { get => GetMovement<PlayerController>(); }
 
-    public float carrySmoothTime { get => m_grabHandler.m_carrySmoothTime; }
-    public Transform grabPivot { get => m_grabHandler.grabPivot; }
+    public float carrySmoothTime            { get => m_grabHandler.m_carrySmoothTime; }
+    public Transform grabPivot              { get => m_grabHandler.grabPivot; }
 
     #endregion
 
@@ -56,7 +58,8 @@ public partial class Player : Entity
                 new Jumping(this),
                 new Grabbing(this, m_grabbing),
                 new Throwing(this, m_throwing),
-                new Launched(this)
+                new Launched(this),
+                new Dashing(this, m_dashing)
             );
     }
 
@@ -84,5 +87,7 @@ public partial class Player : Entity
         [Space]
         public AnimationClip startRun;
         public AnimationClip endRun;
+        [Space]
+        public AnimationClip dash;
     }
 }

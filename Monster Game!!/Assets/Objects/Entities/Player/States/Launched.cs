@@ -21,22 +21,30 @@ public partial class Player
         {
             root.movement.grip = root.m_moveSettings.airGrip;
             root.movement.gravity = root.m_moveSettings.baseGravity;
+
+            root.SwitchAnimation(root.m_animations.startJump);
         }
 
         public override void OnTick(float deltaTime)
         {
             root.movement.ApplyInput(root.m_input, deltaTime);
 
-            if (root.movement.velocity.y < 0)
-            {
-                SwitchToState<Falling>(); 
-                return; 
-            }
             if (Input.GetKeyDown(KeyCode.Space) && root.m_airJumpAvailable)
             {
                 root.m_airJumpAvailable = false;
                 SwitchToState(typeof(Jumping));
                 return;
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift) && root.m_airDashAvailable)
+            {
+                root.m_airDashAvailable = false;
+                SwitchToState<Dashing>().Setup(root.m_input);
+                return;
+            }
+            if (root.movement.velocity.y < 0)
+            {
+                SwitchToState<Falling>(); 
+                return; 
             }
         }
     }
