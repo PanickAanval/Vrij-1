@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 185043022557458547}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 2}
+  m_LocalPosition: {x: 0, y: 0.5, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -121,15 +121,16 @@ MonoBehaviour:
     jumpForce: 8
     airGrip: 3
     fallDrag: 0
+    fallMult: 1
   m_animator: {fileID: 6957116355900542394}
   m_grabbing:
     speed: 15
     drag: 10
-    time: 0.25
+    time: 0.5
   m_throwing:
     strength: 5
     drag: 15
-    time: 0.15
+    time: 0.75
   m_dashing:
     distance: 5
     time: 0.3
@@ -146,14 +147,19 @@ MonoBehaviour:
       type: 3}
     endRun: {fileID: -1339833477917704532, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
-    dash: {fileID: -2246502780319343731, guid: cc5e6b80fd5c27642b81ee10672c5d71, type: 3}
+    dashing: {fileID: -2246502780319343731, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+      type: 3}
+    grabbing: {fileID: 3997614985018663949, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+      type: 3}
+    throwing: {fileID: 9083654474561383684, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+      type: 3}
   m_grabHandler:
     radius: 1
     mask:
       serializedVersion: 2
       m_Bits: 64
     m_carrySmoothTime: 0.05
-    grabPivot: {fileID: 6770951891262812478}
+    grabPivot: {fileID: 3852123804444815781}
   m_center: {fileID: 8186770591459460797}
 --- !u!143 &5217814554882684088
 CharacterController:
@@ -262,6 +268,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc5e6b80fd5c27642b81ee10672c5d71, type: 3}
+--- !u!4 &3852123804444815781 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -18299246894494791, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+    type: 3}
+  m_PrefabInstance: {fileID: 5389545270213098012}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5047104784897476429 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cc5e6b80fd5c27642b81ee10672c5d71,

@@ -27,6 +27,8 @@ partial class Player
         {
             m_timer = new Timer(settings.time);
             root.m_grabHandler.SetState(GrabbyHandler.State.Active);
+
+            root.SwitchAnimation(root.m_animations.throwing);
         }
 
         public override void OnTick(float deltaTime)
@@ -49,6 +51,7 @@ partial class Player
             //if (Input.GetKeyDown(KeyCode.Space)) { SwitchToState<Jumping>(); return; }
             if (m_timer.HasReached(deltaTime))
             {
+                root.SwitchAnimation(root.m_animations.idle, 0.2f);
                 SwitchToState(typeof(Walking));
                 return;
             }

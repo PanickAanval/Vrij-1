@@ -22,7 +22,7 @@ public partial class Monster
         public override void OnEnter()
         {
             root.movement.grip = root.m_moveSettings.airGrip;
-            root.movement.gravity = root.m_moveSettings.baseGravity;
+            root.movement.gravity = root.m_moveSettings.baseGravity * root.m_moveSettings.fallMult;
         }
 
         public override void OnTick(float deltaTime)

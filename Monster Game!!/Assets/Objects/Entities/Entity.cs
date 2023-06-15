@@ -55,8 +55,10 @@ public abstract class Entity : MonoBehaviour
     public class ExtendedMovementSettings : MovementBase.Settings
     {
         [Space]
-        public float jumpForce;
-        public float airGrip;
-        public float fallDrag;
+        [Min(0f)]   public float jumpForce  = 10f;
+        [Min(0f)]   public float airGrip    = 3f;
+        [Space]
+        [Min(0f)]   public float fallDrag   = 0f;
+        [Min(1)]    public float fallMult   = 1f;
     }
 }

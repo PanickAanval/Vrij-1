@@ -26,12 +26,6 @@ partial class Player
         {
             root.movement.ApplyInput(root.m_input, deltaTime);
 
-            if (Input.GetKeyDown(KeyCode.Space) && root.m_airJumpAvailable)
-            {
-                root.m_airJumpAvailable = false;
-                SwitchToState(typeof(Jumping));
-                return;
-            }
             if (Input.GetKeyDown(KeyCode.LeftShift) && root.m_airDashAvailable)
             {
                 root.m_airDashAvailable = false;

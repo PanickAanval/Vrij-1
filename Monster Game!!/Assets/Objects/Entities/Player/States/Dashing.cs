@@ -36,7 +36,7 @@ partial class Player
             m_speed = settings.time > 0f ? settings.distance / settings.time : settings.distance;
             m_timer = new Timer(settings.time);
 
-            root.SwitchAnimation(root.m_animations.dash);
+            root.SwitchAnimation(root.m_animations.dashing);
         }
 
         public override void OnTick(float deltaTime)
@@ -58,7 +58,6 @@ partial class Player
             root.SwitchAnimation(root.m_animations.endRun, 0.1f);
 
             m_timer = null;
-
         }
 
         [System.Serializable]

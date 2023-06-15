@@ -16,7 +16,7 @@ partial class Player
         public override void OnEnter()
         {
             root.movement.grip = root.m_moveSettings.airGrip;
-            root.movement.gravity = root.m_moveSettings.baseGravity;
+            root.movement.gravity = root.m_moveSettings.baseGravity * root.m_moveSettings.fallMult;
 
             root.SwitchAnimation(root.m_animations.falling);
         }
@@ -26,12 +26,6 @@ partial class Player
             root.movement.verticalVelocity += root.m_moveSettings.fallDrag * deltaTime;
             root.movement.ApplyInput(root.m_input, deltaTime);
 
-            if (Input.GetKeyDown(KeyCode.Space) && root.m_airJumpAvailable)
-            {
-                root.m_airJumpAvailable = false;
-                SwitchToState(typeof(Jumping));
-                return;
-            }
             if (Input.GetKeyDown(KeyCode.LeftShift) && root.m_airDashAvailable)
             {
                 root.m_airDashAvailable = false;
@@ -47,7 +41,11 @@ partial class Player
 
         private void OnLand()
         {
-            root.m_airJumpAvailable = true;
+            root.movement.speed = root.m_moveSettings.baseSpeed;
+            root.movement.grip = root.m_moveSettings.baseGrip;
+            root.movement.gravity = 0f;
+            root.movement.verticalVelocity = 0f;
+
             root.m_airDashAvailable = true;
 
             //  Return to walking if the ground does not have any special logic.

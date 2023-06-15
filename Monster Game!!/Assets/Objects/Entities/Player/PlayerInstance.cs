@@ -33,7 +33,7 @@ public partial class PlayerInstance : MonoBehaviour
 
         m_player.Tick(leftInput.normalized, deltaTime, -m_camera.transform.eulerAngles.y);
         m_camera.Tick(-rightInput, m_player.flatVelocity, deltaTime);
-        m_shadow.Tick(m_player.transform.position);
+        m_shadow.Tick(m_player.transform.position, m_player.movement.onGround);
     }
 
     public void DrawGizmos()

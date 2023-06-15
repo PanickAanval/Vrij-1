@@ -22,8 +22,10 @@ partial class Player
         public override void OnEnter()
         {
             m_timer = new Timer(settings.time);
-            root.m_grabbingItem.OnRelease(root, root.transform.forward * settings.strength);
+            root.m_grabbingItem.OnRelease(root, (root.transform.forward * settings.strength) + root.velocity);
             root.m_grabbingItem = null;
+
+            root.SwitchAnimation(root.m_animations.throwing);
         }
 
         public override void OnTick(float deltaTime)
@@ -37,6 +39,7 @@ partial class Player
             }
             if (m_timer.HasReached(deltaTime))
             {
+                root.SwitchAnimation(root.m_animations.idle, 0.2f);
                 SwitchToState(typeof(Walking));
                 return;
             }

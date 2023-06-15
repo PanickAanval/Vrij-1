@@ -14,14 +14,6 @@ partial class Player
 
         public Walking(Player root) : base(root) { }
 
-        public override void OnEnter()
-        {
-            root.movement.speed = root.m_moveSettings.baseSpeed;
-            root.movement.grip = root.m_moveSettings.baseGrip;
-            root.movement.gravity = 0f;
-            root.movement.verticalVelocity = 0f;
-        }
-
         public override void OnTick(float deltaTime)
         {   
             switch (m_state)

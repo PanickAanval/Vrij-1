@@ -24,7 +24,6 @@ public partial class Player : Entity
 
     //  TESTING PURPOSES:
     private IGrabbable m_grabbingItem = null;
-    private bool m_airJumpAvailable = true;
     private bool m_airDashAvailable = true;
 
     #region Properties
@@ -88,6 +87,9 @@ public partial class Player : Entity
         public AnimationClip startRun;
         public AnimationClip endRun;
         [Space]
-        public AnimationClip dash;
+        public AnimationClip dashing;
+        [Space]
+        public AnimationClip grabbing;
+        public AnimationClip throwing;
     }
 }

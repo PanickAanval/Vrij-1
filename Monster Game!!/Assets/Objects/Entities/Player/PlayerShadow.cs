@@ -14,22 +14,26 @@ public class PlayerShadow : MonoBehaviour
         m_castRadius = controller.radius / 2;
     }
 
-    public void Tick(Vector3 playerPos)
+    public void Tick(Vector3 playerPos, bool onGround)
     {
-        transform.position = GetPosition(playerPos);
+        transform.position = GetPosition(playerPos, onGround);
     }
 
-    private Vector3 GetPosition(Vector3 playerPos)
+    private Vector3 GetPosition(Vector3 playerPos, bool onGround)
     {
-        if (Physics.SphereCast(playerPos, m_castRadius, Vector3.down, out RaycastHit hit))
+        if (onGround)
+        {
+            gameObject.SetActive(true);
+            return playerPos;
+        }
+        if (Physics.SphereCast(playerPos + Vector3.up * m_castRadius, m_castRadius, Vector3.down, out RaycastHit hit))
         {
             gameObject.SetActive(true);
             return hit.point + (hit.normal * m_normalOffset);
         }
-        else
-        {
-            gameObject.SetActive(false);
-            return Vector3.zero;
-        }
+
+        //  Disable shadow if no ground is under the player at all.
+        gameObject.SetActive(false);
+        return Vector3.zero;
     }
 }

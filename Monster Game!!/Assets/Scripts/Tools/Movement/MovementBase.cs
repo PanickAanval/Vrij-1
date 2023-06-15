@@ -123,26 +123,26 @@ namespace Joeri.Tools.Movement
             m_horizontal.CalculateVelocity(drag, deltaTime);
             m_vertical.CalculateVelocity(deltaTime);
 
+            if (canRotate && flatVelocity != Vector2.zero) RotateToVelocity(deltaTime);
+
             ApplyVelocity(deltaTime);
         }
 
         /// <summary>
-        /// Applies the velocity of the of the two acceleration classes to the character controller.
+        /// Rotates the transform bearing the character controller to face the passed in direction.
         /// </summary>
-        private void ApplyVelocity(float deltaTime)
+        public void RotateToDir(Vector2 dir, float deltaTime)
         {
-            controller.Move(velocity * deltaTime);
-            m_onGround = isOnGround(out GroundInfo groundInfo);
-            m_groundInfo = groundInfo;
+            RotateToAngle(Vectors.VectorToAngle(dir), deltaTime);
         }
 
         /// <summary>
-        /// Rotates the transform bearing the character controller to the direction of the velocity, with 
+        /// Rotates the transform bearing the character controller to the passed in angle.
         /// </summary>
-        private void RotateToVelocity(float deltaTime)
+        public void RotateToAngle(float angle, float deltaTime)
         {
             var currentAngle = controller.transform.eulerAngles.y;
-            var desiredAngle = Vectors.VectorToAngle(flatVelocity);
+            var desiredAngle = angle % 360f;
 
             if (rotationTime > 0)
             {
@@ -155,8 +155,31 @@ namespace Joeri.Tools.Movement
             controller.transform.eulerAngles = new Vector3(controller.transform.eulerAngles.x, currentAngle, controller.transform.eulerAngles.z);
         }
 
+        /// <summary>
+        /// Applies the velocity of the of the two acceleration classes to the character controller.
+        /// </summary>
+        private void ApplyVelocity(float deltaTime)
+        {
+            if (canRotate && flatVelocity != Vector2.zero)
+            {
+                RotateToVelocity(deltaTime);
+            }
+            controller.Move(velocity * deltaTime);
+
+            m_onGround = IsOnGround(out GroundInfo groundInfo);
+            m_groundInfo = groundInfo;
+        }
+
+        /// <summary>
+        /// Rotates the transform bearing the character controller to the direction of the velocity, with 
+        /// </summary>
+        private void RotateToVelocity(float deltaTime)
+        {
+            RotateToDir(flatVelocity, deltaTime);
+        }
+
         /// <returns>True if the player is standing on valid ground. Calculated by a Physics.OverlapSphere(...).</returns>
-        public bool isOnGround(out GroundInfo info)
+        public bool IsOnGround(out GroundInfo info)
         {
             info = null;
 
@@ -203,11 +226,11 @@ namespace Joeri.Tools.Movement
         [System.Serializable]
         public class Settings
         {
-            public float baseSpeed;
-            public float baseGrip;
+            [Min(0f)] public float baseSpeed;
+            [Min(0f)] public float baseGrip;
             public float baseGravity;
             [Space]
-            public float baseRotationTime;
+            [Min(0f)] public float baseRotationTime;
             [Space]
             public LayerMask movementMask;
         }
