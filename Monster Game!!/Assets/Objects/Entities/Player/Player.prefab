@@ -121,7 +121,7 @@ MonoBehaviour:
     jumpForce: 8
     airGrip: 3
     fallDrag: 0
-    fallMult: 1
+    fallMult: 2.5
   m_animator: {fileID: 6957116355900542394}
   m_grabbing:
     speed: 15
@@ -134,7 +134,7 @@ MonoBehaviour:
   m_dashing:
     distance: 5
     time: 0.3
-    exitSpeed: 8
+    exitSpeed: 9
   m_animations:
     idle: {fileID: -8945691123924629249, guid: cc5e6b80fd5c27642b81ee10672c5d71, type: 3}
     startJump: {fileID: 5277777409621656941, guid: cc5e6b80fd5c27642b81ee10672c5d71,
