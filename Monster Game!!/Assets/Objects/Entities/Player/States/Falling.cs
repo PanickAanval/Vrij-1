@@ -24,19 +24,15 @@ partial class Player
         public override void OnTick(float deltaTime)
         {
             root.movement.verticalVelocity += root.m_moveSettings.fallDrag * deltaTime;
-            root.movement.ApplyInput(root.m_input, deltaTime);
+            root.movement.ApplyInput(root.m_leftInputDir, deltaTime);
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && root.m_airDashAvailable)
+            if (root.m_input.dashButtonPressed && root.m_airDashAvailable)
             {
                 root.m_airDashAvailable = false;
-                SwitchToState<Dashing>().Setup(root.m_input);
+                SwitchToState<Dashing>().Setup(root.m_leftInputDir);
                 return;
             }
-            if (root.movement.onGround)
-            {
-                OnLand();
-                return;
-            }
+            if (root.movement.onGround) { OnLand(); return; }
         }
 
         private void OnLand()

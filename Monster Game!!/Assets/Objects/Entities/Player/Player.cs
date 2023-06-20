@@ -20,7 +20,8 @@ public partial class Player : Entity
     [SerializeField] private Transform m_center;
 
     //  Cache:
-    private Vector2 m_input;
+    private Controls.Results m_input;
+    private Vector2 m_leftInputDir;
 
     //  TESTING PURPOSES:
     private IGrabbable m_grabbingItem = null;
@@ -62,11 +63,11 @@ public partial class Player : Entity
             );
     }
 
-    public void Tick(Vector2 input, float deltaTime, float cameraAngle)
+    public void Tick(Controls.Results input, float deltaTime, float cameraAngle)
     {
         //  We rotate the input vector by the angle of the camera, so that the player moves forward in relation to the camera at all times.
-        //  For now, the angle by which we rotate is negative. I have yet to find out why it rotates the wrong way.
-        m_input = Vectors.RotateVector2(input, cameraAngle);
+        m_input = input;
+        m_leftInputDir = Vectors.RotateVector2(input.leftInput, cameraAngle);
         m_stateMachine.Tick(deltaTime);
     }
 

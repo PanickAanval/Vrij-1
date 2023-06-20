@@ -48,7 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_followTime: 0.15
-  m_rotationSpeed: 180
+  m_rotationSpeed: 225
+  m_rotationGrip: 30
   m_referenceSpeed: 10
   m_adjustmentTime: 1
 --- !u!20 &3229365700705102628

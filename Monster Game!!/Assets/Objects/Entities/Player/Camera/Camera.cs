@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Joeri.Tools;
 using Joeri.Tools.Utilities;
+using Joeri.Tools.Movement;
 using Joeri.Tools.Debugging;
 
 public class Camera : MonoBehaviour
@@ -10,6 +11,7 @@ public class Camera : MonoBehaviour
     [Header("General:")]
     [SerializeField] private float m_followTime = 0.1f;
     [SerializeField] private float m_rotationSpeed = 180f;
+    [SerializeField] private float m_rotationGrip = 1f;
 
     [Header("Direction Adjustment:")]
     [SerializeField] private float m_referenceSpeed = 3f;
@@ -21,6 +23,8 @@ public class Camera : MonoBehaviour
 
     //  Tracking the player:
     private Vector3 m_followVelocity = Vector3.zero;
+    private Accel.Singular m_yAccel = new Accel.Singular();
+    private Accel.Singular m_xAccel = new Accel.Singular();
 
     //  Adjusting the look direction:
     private Vector2 m_desiredLookDir = Vector2.zero;
@@ -78,7 +82,8 @@ public class Camera : MonoBehaviour
             var angle = m_orbit.yAngle;
 
             //  Apply the manual rotation offset to the current angle.
-            angle = Mathf.Repeat(angle - (xInput * (m_rotationSpeed * deltaTime)), 360f);
+            angle -= m_yAccel.CalculateVelocity(xInput, m_rotationSpeed, m_rotationGrip, deltaTime) * deltaTime;
+            angle = Mathf.Repeat(angle, 360f);
 
             //  Calculate adjustment factor.
             var adjustmentFactor = Mathf.Clamp01(Vector2.Dot(Vectors.VectorToFlat(m_orbit.direction), m_desiredLookDir) + 1);
@@ -97,8 +102,9 @@ public class Camera : MonoBehaviour
             var angle = m_orbit.xAngle;
 
             //  Apply the manual rotation offset to the current angle.
-            angle += yInput * (m_rotationSpeed * deltaTime);
+            angle += m_xAccel.CalculateVelocity(yInput, m_rotationSpeed, m_rotationGrip, deltaTime) * deltaTime;
             angle = Mathf.Clamp(angle, -80f, 80f);
+
             return angle;
         }
 

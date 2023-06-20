@@ -43,12 +43,7 @@ partial class Player
                 root.m_grabHandler.SetState(GrabbyHandler.State.Inactive);
             }
 
-            if (!root.movement.onGround)
-            {
-                SwitchToState(typeof(Falling));
-                return;
-            }
-            //if (Input.GetKeyDown(KeyCode.Space)) { SwitchToState<Jumping>(); return; }
+            if (!root.movement.onGround) { SwitchToState(typeof(Falling)); return; }
             if (m_timer.HasReached(deltaTime))
             {
                 root.SwitchAnimation(root.m_animations.idle, 0.2f);

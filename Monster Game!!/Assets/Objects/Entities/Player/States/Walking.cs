@@ -19,7 +19,7 @@ partial class Player
             switch (m_state)
             {
                 case State.Idle:
-                    if (root.m_input != Vector2.zero)
+                    if (root.m_input.leftInput != Vector2.zero)
                     {
                         root.SwitchAnimation(root.m_animations.startRun);
                         m_state = State.Running;
@@ -27,7 +27,7 @@ partial class Player
                     break;
 
                 case State.Running:
-                    if (root.m_input == Vector2.zero)
+                    if (root.m_input.leftInput == Vector2.zero)
                     {
                         root.SwitchAnimation(root.m_animations.endRun, 0.15f);
                         m_state = State.Idle;
@@ -35,24 +35,12 @@ partial class Player
                     break;
             }
 
-            root.movement.ApplyInput(root.m_input, deltaTime);
+            root.movement.ApplyInput(root.m_leftInputDir, deltaTime);
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                SwitchToState(typeof(Jumping));
-                return;
-            }
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                SwitchToState<Dashing>().Setup(root.m_input);
-                return;
-            }
-            if (!root.movement.onGround)
-            {
-                SwitchToState(typeof(Falling));
-                return;
-            }
-            if (Input.GetKeyDown(KeyCode.F))
+            if (root.m_input.jumpButtonPressed) { SwitchToState(typeof(Jumping));                       return;  }
+            if (root.m_input.dashButtonPressed) { SwitchToState<Dashing>().Setup(root.m_leftInputDir);  return; }
+            if (!root.movement.onGround)        { SwitchToState(typeof(Falling));                       return;  }
+            if (root.m_input.grabButtonPressed)
             {
                 if (root.m_grabbingItem == null)
                 {

@@ -32,11 +32,7 @@ partial class Player
         {
             root.movement.ApplyDrag(settings.drag, deltaTime);
 
-            if (!root.movement.onGround)
-            {
-                SwitchToState(typeof(Falling));
-                return;
-            }
+            if (!root.movement.onGround) { SwitchToState(typeof(Falling)); return; }
             if (m_timer.HasReached(deltaTime))
             {
                 root.SwitchAnimation(root.m_animations.idle, 0.2f);

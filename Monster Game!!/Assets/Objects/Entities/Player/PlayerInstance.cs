@@ -8,6 +8,8 @@ public partial class PlayerInstance : MonoBehaviour
     [SerializeField] private Camera m_camera;
     [SerializeField] private PlayerShadow m_shadow;
 
+    private Controls m_controls = new Controls();
+
     public Player player { get => m_player; }
 
     public void Setup()
@@ -19,20 +21,10 @@ public partial class PlayerInstance : MonoBehaviour
 
     public void Tick(float deltaTime)
     {
-        var leftInput = Vector2.zero;
-        if (Input.GetKey(KeyCode.W)) leftInput.y++;
-        if (Input.GetKey(KeyCode.S)) leftInput.y--;
-        if (Input.GetKey(KeyCode.A)) leftInput.x--;
-        if (Input.GetKey(KeyCode.D)) leftInput.x++;
+        var input = m_controls.GetInput();
 
-        var rightInput = Vector2.zero;
-        if (Input.GetKey(KeyCode.UpArrow)) rightInput.y++;
-        if (Input.GetKey(KeyCode.DownArrow)) rightInput.y--;
-        if (Input.GetKey(KeyCode.LeftArrow)) rightInput.x--;
-        if (Input.GetKey(KeyCode.RightArrow)) rightInput.x++;
-
-        m_player.Tick(leftInput.normalized, deltaTime, -m_camera.transform.eulerAngles.y);
-        m_camera.Tick(-rightInput, m_player.flatVelocity, deltaTime);
+        m_player.Tick(input, deltaTime, -m_camera.transform.eulerAngles.y);
+        m_camera.Tick(-input.rightInput, m_player.flatVelocity, deltaTime);
         m_shadow.Tick(m_player.transform.position, m_player.movement.onGround);
     }
 
