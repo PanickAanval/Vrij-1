@@ -12,15 +12,16 @@ public partial class GlidyGeezer : Monster
     [SerializeField] private float m_rotateAmount = 3f;
 
     //  Run-time:
-    private Swapper<float> m_dragSwapper = null;
+    private Swapper<float> m_multSwapper = null;
 
     public override void Setup(Player player)
     {
         base.Setup(player);
-        m_dragSwapper = new Swapper<float>(m_moveSettings.fallDrag);
+        m_multSwapper = new Swapper<float>(m_moveSettings.fallMult);
         m_stateMachine = new FSM
             (
-                typeof(Rotating),
+                typeof(Jumping),
+                new Jumping(this),
                 new Falling(this, typeof(Rotating)),
                 new PickedUp(this),
                 new Thrown(this),
@@ -31,13 +32,13 @@ public partial class GlidyGeezer : Monster
     public override void OnGrab(Player player)
     {
         m_stateMachine.SwitchToState<PickedUp>().Setup(player.carrySmoothTime, player.grabPivot);
-        player.moveSettings.fallDrag = m_dragSwapper.Swap(player.moveSettings.fallDrag);
+        player.moveSettings.fallMult = m_multSwapper.Swap(player.moveSettings.fallMult);
     }
 
     public override void OnRelease(Player player, Vector3 releaseVelocity)
     {
         m_stateMachine.SwitchToState<Thrown>().Setup(releaseVelocity);
-        player.moveSettings.fallDrag = m_dragSwapper.Swap(player.moveSettings.fallDrag);
+        player.moveSettings.fallMult = m_multSwapper.Swap(player.moveSettings.fallMult);
     }
 }
 

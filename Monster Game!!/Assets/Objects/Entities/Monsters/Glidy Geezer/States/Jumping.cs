@@ -8,28 +8,24 @@ using Joeri.Tools;
 using Joeri.Tools.Structure;
 using Joeri.Tools.Debugging;
 
-public partial class Monster
+public partial class GlidyGeezer
 {
-    public class Falling : FlexState<Monster>
+    public class Jumping : FlexState<GlidyGeezer>
     {
-        private System.Type m_returnState = null;
-
-        public Falling(Monster root, System.Type returnState) : base(root)
-        {
-            m_returnState = returnState;
-        }
+        public Jumping(GlidyGeezer root) : base(root) { }
 
         public override void OnEnter()
         {
+            root.movement.velocity  = (root.transform.forward + Vector3.up) * root.m_moveSettings.jumpForce;
+
             root.movement.grip      = root.m_moveSettings.airGrip;
-            root.movement.gravity   = root.m_moveSettings.baseGravity * root.m_moveSettings.fallMult;
+            root.movement.gravity   = root.m_moveSettings.baseGravity;
         }
 
         public override void OnTick(float deltaTime)
         {
-            if (root.movement.onGround) { SwitchToState(m_returnState); return; }
+            if (root.movement.verticalVelocity < 0) { SwitchToState(typeof(Falling)); return; }
             root.movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
         }
     }
 }
-

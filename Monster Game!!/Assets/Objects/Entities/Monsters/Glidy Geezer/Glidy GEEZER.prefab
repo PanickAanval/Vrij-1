@@ -57,7 +57,7 @@ MonoBehaviour:
     jumpForce: 4
     airGrip: 0
     fallDrag: 5
-    fallMult: 1
+    fallMult: 0.33
   m_animator: {fileID: 0}
   m_rotationTime: 2
   m_rotateAmount: 180
