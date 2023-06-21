@@ -17,7 +17,6 @@ namespace Joeri.Tools.Movement
 
         //  Run-time:
         protected bool m_onGround = false;
-        protected GroundInfo m_groundInfo = null;
 
         private float m_rotationVelocity = 0f;
 
@@ -63,7 +62,6 @@ namespace Joeri.Tools.Movement
         }
 
         public bool onGround { get => m_onGround; }
-        public GroundInfo groundInfo { get => m_groundInfo; }
 
         //  Reference:
         public CharacterController controller { get; private set; }
@@ -166,8 +164,7 @@ namespace Joeri.Tools.Movement
             }
             controller.Move(velocity * deltaTime);
 
-            m_onGround = IsOnGround(out GroundInfo groundInfo);
-            m_groundInfo = groundInfo;
+            m_onGround = IsOnGround();
         }
 
         /// <summary>
@@ -179,20 +176,13 @@ namespace Joeri.Tools.Movement
         }
 
         /// <returns>True if the player is standing on valid ground. Calculated by a Physics.OverlapSphere(...).</returns>
-        public bool IsOnGround(out GroundInfo info)
+        public bool IsOnGround()
         {
-            info = null;
-
             if (controller == null) return false;
 
             var overlappingColliders = Physics.OverlapSphere(groundCheckOrigin, controller.radius, m_movementMask, QueryTriggerInteraction.Ignore);
 
-            if (overlappingColliders.Length > 0)
-            {
-                info = new GroundInfo(overlappingColliders);
-                return true;
-            }
-            return false;
+            return overlappingColliders.Length > 0;
         }
 
         /// <summary>
@@ -203,24 +193,6 @@ namespace Joeri.Tools.Movement
             GizmoTools.DrawSphere(groundCheckOrigin, controller.radius, onGround ? Color.white : Color.black, 0.5f, true, 0.75f);
             m_horizontal.Draw(controller.transform.position, Color.blue, Color.black, 0.75f);
             m_vertical.Draw(controller.transform.position, Vector3.up, Color.green, 0.5f);
-        }
-
-        /// <summary>
-        /// Class holding info of the ground you're currently stnading on.
-        /// </summary>
-        public class GroundInfo
-        {
-            public readonly Collider[] colliders = null;
-
-            public GroundInfo(Collider[] interactingGroundColliders)
-            {
-                colliders = interactingGroundColliders;
-            }
-
-            public bool Contains<T>(out T[] containingComponents)
-            {
-                return Util.Contains(out containingComponents, colliders);
-            }
         }
 
         [System.Serializable]

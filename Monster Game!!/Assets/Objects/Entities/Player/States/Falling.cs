@@ -43,21 +43,8 @@ partial class Player
 
             root.m_airDashAvailable = true;
 
-            //  Return to walking if the ground does not have any special logic.
-            //  Ideally we would want to know if any piece of ground inherits from the IStandable interface, but I have yet to figure out how.
-            if (!root.movement.groundInfo.Contains(out SpringyFella[] components))
-            {
-                root.SwitchAnimation(root.m_animations.jumpLand);
-                SwitchToState<Walking>();
-                return;
-            }
-
-            //  If it does, execute their logic.
-            for (int i = 0; i < components.Length; i++)
-            {
-                components[i].OnStand(root);
-                return;
-            }
+            root.SwitchAnimation(root.m_animations.jumpLand);
+            SwitchToState<Walking>();
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Joeri.Tools.Structure
 
         protected State m_currentState = null;
 
+        public System.Type activeState { get => m_currentState.GetType(); }
+
         public FSM(System.Type startState, params State[] states)
         {
             m_states = new Dictionary<System.Type, State>();

@@ -117,7 +117,7 @@ MonoBehaviour:
     baseRotationTime: 0.05
     movementMask:
       serializedVersion: 2
-      m_Bits: 119
+      m_Bits: 55
     jumpForce: 8
     airGrip: 3
     fallMult: 2.5

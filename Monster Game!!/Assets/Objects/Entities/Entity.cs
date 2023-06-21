@@ -18,6 +18,8 @@ public abstract class Entity : MonoBehaviour
 
     #region Properties
 
+    public System.Type activeState { get => m_stateMachine.activeState; }
+
     public ExtendedMovementSettings moveSettings { get => m_moveSettings; }
 
     #endregion
