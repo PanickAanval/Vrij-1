@@ -10,11 +10,11 @@ using Joeri.Tools.Debugging;
 
 public partial class Monster
 {
-    public class Falling : FlexState<Monster>
+    public class Falling : EntityState<Monster>
     {
         private System.Type m_returnState = null;
 
-        public Falling(Monster root, System.Type returnState) : base(root)
+        public Falling(Monster root, Settings settings, System.Type returnState) : base(root, settings)
         {
             m_returnState = returnState;
         }
@@ -23,6 +23,8 @@ public partial class Monster
         {
             root.movement.grip      = root.m_moveSettings.airGrip;
             root.movement.gravity   = root.m_moveSettings.baseGravity * root.m_moveSettings.fallMult;
+
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)

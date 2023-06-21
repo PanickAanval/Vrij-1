@@ -10,13 +10,15 @@ using Joeri.Tools.Debugging;
 
 public partial class SpringyFella
 {
-    public class Follow : FlexState<SpringyFella>
+    public class Follow : EntityState<SpringyFella>
     {
-        public Follow(SpringyFella root) : base(root) { }
+        public Follow(SpringyFella root, Settings settings) : base(root, settings) { }
 
         public override void OnEnter()
         {
             root.movement.SetBehaviors(new Pursue(root.m_lookAheadTime, root.m_player.transform));
+
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)

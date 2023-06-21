@@ -10,11 +10,11 @@ using Joeri.Tools.Debugging;
 
 public partial class GlidyGeezer
 {
-    public class Rotating : FlexState<GlidyGeezer>
+    public class Rotating : EntityState<GlidyGeezer>
     {
         private Timer m_timer = null;
 
-        public Rotating(GlidyGeezer root) : base(root) { }
+        public Rotating(GlidyGeezer root, Settings settings) : base(root, settings) { }
 
         public override void OnEnter()
         {
@@ -24,6 +24,8 @@ public partial class GlidyGeezer
             root.movement.grip              = root.m_moveSettings.baseGrip;
             root.movement.gravity           = 0f;
             root.movement.verticalVelocity  = 0f;
+
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)

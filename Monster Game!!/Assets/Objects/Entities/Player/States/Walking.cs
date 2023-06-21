@@ -8,38 +8,25 @@ using Joeri.Tools.Structure;
 
 partial class Player
 {
-    public class Walking : FlexState<Player>
+    public class Walking : EntityState<Player>
     {
-        private State m_state = State.Idle;
+        public Settings settings { get => GetSettings<Settings>(); }
 
-        public Walking(Player root) : base(root) { }
+        public Walking(Player root, Settings settings) : base(root, settings) { }
 
         public override void OnTick(float deltaTime)
-        {   
-            switch (m_state)
-            {
-                case State.Idle:
-                    if (root.m_input.leftInput != Vector2.zero)
-                    {
-                        root.SwitchAnimation(root.m_animations.startRun);
-                        m_state = State.Running;
-                    }
-                    break;
-
-                case State.Running:
-                    if (root.m_input.leftInput == Vector2.zero)
-                    {
-                        root.SwitchAnimation(root.m_animations.endRun, 0.15f);
-                        m_state = State.Idle;
-                    }
-                    break;
-            }
-
+        {
             root.movement.ApplyInput(root.m_leftInputDir, deltaTime);
 
-            if (root.m_input.jumpButtonPressed) { SwitchToState(typeof(Jumping));                       return;  }
-            if (root.m_input.dashButtonPressed) { SwitchToState<Dashing>().Setup(root.m_leftInputDir);  return; }
-            if (!root.movement.onGround)        { SwitchToState(typeof(Falling));                       return;  }
+            if (root.m_input.leftInput == Vector2.zero) 
+            {
+                root.SwitchAnimation(settings.endRunAnimation, 0.15f);
+                SwitchToState(typeof(Idle)); 
+                return;
+            }
+            if (root.m_input.jumpButtonPressed)         { SwitchToState(typeof(Jumping)); return; }
+            if (root.m_input.dashButtonPressed)         { SwitchToState<Dashing>().Setup(root.m_leftInputDir); return; }
+            if (!root.movement.onGround)                { SwitchToState(typeof(Falling)); return; }
             if (root.m_input.grabButtonPressed)
             {
                 if (root.m_grabbingItem == null)
@@ -52,11 +39,10 @@ partial class Player
             }
         }
 
-        public override void OnExit()
+        [System.Serializable]
+        public class Settings : EntityState<Player>.Settings
         {
-            m_state = State.Idle;
+            public AnimationClip endRunAnimation;
         }
-
-        private enum State { Idle, Running }
     }
 }

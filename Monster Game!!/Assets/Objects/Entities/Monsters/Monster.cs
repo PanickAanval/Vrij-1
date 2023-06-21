@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +8,11 @@ using Joeri.Tools.Movement;
 
 public abstract partial class Monster : Entity, IGrabbable
 {
+    [Header("Monster States:")]
+    [SerializeField] protected Falling.Settings m_falling;
+    [SerializeField] protected PickedUp.Settings m_pickedUp;
+    [SerializeField] protected Thrown.Settings m_thrown;
+
     //  Cache:
     protected Player m_player = null;
 

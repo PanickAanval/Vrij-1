@@ -9,9 +9,9 @@ using Joeri.Tools;
 
 partial class Player
 {
-    public class Jumping : FlexState<Player>
+    public class Jumping : EntityState<Player>
     {
-        public Jumping(Player root) : base(root) { }
+        public Jumping(Player root, Settings settings) : base(root, settings) { }
 
         public override void OnEnter()
         {
@@ -19,7 +19,7 @@ partial class Player
             root.movement.gravity = root.m_moveSettings.baseGravity;
             root.movement.verticalVelocity = root.m_moveSettings.jumpForce;
 
-            root.SwitchAnimation(root.m_animations.startJump);
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)

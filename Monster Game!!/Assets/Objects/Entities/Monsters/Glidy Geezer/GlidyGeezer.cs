@@ -11,6 +11,10 @@ public partial class GlidyGeezer : Monster
     [SerializeField] private float m_rotationTime = 3f;
     [SerializeField] private float m_rotateAmount = 3f;
 
+    [Header("Glidy Geezer States:")]
+    [SerializeField] protected Rotating.Settings m_rotating;
+    [SerializeField] protected Jumping.Settings m_jumping;
+
     //  Run-time:
     private Swapper<float> m_multSwapper = null;
 
@@ -21,11 +25,11 @@ public partial class GlidyGeezer : Monster
         m_stateMachine = new FSM
             (
                 typeof(Jumping),
-                new Jumping(this),
-                new Falling(this, typeof(Rotating)),
-                new PickedUp(this),
-                new Thrown(this),
-                new Rotating(this)
+                new Jumping(this, m_jumping),
+                new Falling(this, m_falling, typeof(Rotating)),
+                new PickedUp(this, m_pickedUp),
+                new Thrown(this, m_thrown),
+                new Rotating(this, m_rotating)
             );
     }
 

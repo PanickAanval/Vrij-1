@@ -9,16 +9,18 @@ using Joeri.Tools;
 
 partial class Player
 {
-    public class Falling : FlexState<Player>
+    public class Falling : EntityState<Player>
     {
-        public Falling(Player root) : base(root) { }
+        public Settings settings { get => GetSettings<Settings>(); }
+
+        public Falling(Player root, Settings settings) : base(root, settings) { }
 
         public override void OnEnter()
         {
             root.movement.grip = root.m_moveSettings.airGrip;
             root.movement.gravity = root.m_moveSettings.baseGravity * root.m_moveSettings.fallMult;
 
-            root.SwitchAnimation(root.m_animations.falling);
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)
@@ -43,8 +45,14 @@ partial class Player
 
             root.m_airDashAvailable = true;
 
-            root.SwitchAnimation(root.m_animations.jumpLand);
-            SwitchToState<Walking>();
+            root.SwitchAnimation(settings.landAnimation);
+            SwitchToState(typeof(Idle));
+        }
+
+        [System.Serializable]
+        public class Settings : EntityState<Player>.Settings
+        {
+            public AnimationClip landAnimation;
         }
     }
 }

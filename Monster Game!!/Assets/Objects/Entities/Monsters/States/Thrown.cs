@@ -9,9 +9,9 @@ using Joeri.Tools.Structure;
 
 public abstract partial class Monster
 {
-    public class Thrown : FlexState<Monster>
+    public class Thrown : EntityState<Monster>
     {
-        public Thrown(Monster root) : base(root) { }
+        public Thrown(Monster root, Settings settings) : base(root, settings) { }
 
         public void Setup(Vector3 velocity)
         {
@@ -22,6 +22,8 @@ public abstract partial class Monster
         {
             root.movement.grip = 0f;
             root.movement.gravity = root.m_moveSettings.baseGravity;
+
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)

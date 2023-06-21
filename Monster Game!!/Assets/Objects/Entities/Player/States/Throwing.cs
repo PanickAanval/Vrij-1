@@ -10,7 +10,7 @@ using Joeri.Tools.Structure;
 
 partial class Player
 {
-    public class Throwing : FlexState<Player>
+    public class Throwing : EntityState<Player>
     {
         private Timer m_timer = null;
         private IGrabbable m_grabbingItem = null;
@@ -25,7 +25,7 @@ partial class Player
             root.m_grabbingItem.OnRelease(root, (root.transform.forward * settings.strength) + root.velocity);
             root.m_grabbingItem = null;
 
-            root.SwitchAnimation(root.m_animations.throwing);
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)
@@ -35,7 +35,7 @@ partial class Player
             if (!root.movement.onGround) { SwitchToState(typeof(Falling)); return; }
             if (m_timer.HasReached(deltaTime))
             {
-                root.SwitchAnimation(root.m_animations.idle, 0.2f);
+                root.SwitchAnimation(settings.exitAnimation, 0.2f);
                 SwitchToState(typeof(Walking));
                 return;
             }
@@ -47,8 +47,9 @@ partial class Player
         }
 
         [System.Serializable]
-        public class Settings : FlexState<Player>.Settings
+        public class Settings : EntityState<Player>.Settings
         {
+            public AnimationClip exitAnimation;
             public float strength;
             public float drag;
             public float time;

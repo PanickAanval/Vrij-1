@@ -11,6 +11,13 @@ public partial class SpringyFella : Monster
     [SerializeField] private float m_lookAheadTime = 0.1f;
     [Space]
     [SerializeField] private float m_stunnedTime = 0.5f;
+    [Space]
+    [SerializeField] private Animations m_animations;
+
+    [Header("Springy Fella States:")]
+    [SerializeField] protected Idle.Settings m_idle;
+    [SerializeField] protected Follow.Settings m_follow;
+    [SerializeField] protected Stunned.Settings m_stunned;
 
     [Header("Springy Fella References:")]
     [SerializeField] private PlayerLauncher m_launcher;
@@ -21,12 +28,12 @@ public partial class SpringyFella : Monster
         m_stateMachine = new FSM
             (
                 typeof(Idle),
-                new Falling(this, typeof(Stunned)),
-                new PickedUp(this),
-                new Thrown(this),
-                new Idle(this),
-                new Follow(this),
-                new Stunned(this)
+                new Idle(this, m_idle),
+                new Follow(this, m_follow),
+                new Falling(this, m_falling ,typeof(Stunned)),
+                new PickedUp(this, m_pickedUp),
+                new Thrown(this, m_thrown),
+                new Stunned(this, m_stunned)
             );
     }
 }

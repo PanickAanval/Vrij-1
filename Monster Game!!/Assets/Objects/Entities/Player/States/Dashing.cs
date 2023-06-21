@@ -11,7 +11,7 @@ using Joeri.Tools.Structure;
 
 partial class Player
 {
-    public class Dashing : FlexState<Player>
+    public class Dashing : EntityState<Player>
     {
         //  Properties:
         private Vector2 m_direction = Vector2.zero;
@@ -36,7 +36,7 @@ partial class Player
             m_speed = settings.time > 0f ? settings.distance / settings.time : settings.distance;
             m_timer = new Timer(settings.time);
 
-            root.SwitchAnimation(root.m_animations.dashing);
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)
@@ -44,7 +44,7 @@ partial class Player
             root.controller.Move(root.velocity * deltaTime);
 
             if (!m_timer.HasReached(deltaTime)) return;
-            if (root.movement.onGround) SwitchToState(typeof(Walking));
+            if (root.movement.onGround) SwitchToState(typeof(Idle));
             else                        SwitchToState(typeof(Falling));
         }
 
@@ -55,13 +55,11 @@ partial class Player
 
             root.flatVelocity = root.flatVelocity.normalized * settings.exitSpeed;
 
-            root.SwitchAnimation(root.m_animations.endRun, 0.1f);
-
             m_timer = null;
         }
 
         [System.Serializable]
-        public class Settings : FlexState<Player>.Settings
+        public class Settings : EntityState<Player>.Settings
         {
             public float distance = 3f;
             public float time = 0.25f;
