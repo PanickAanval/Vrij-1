@@ -17,6 +17,7 @@ namespace Joeri.Tools.Movement
 
         //  Run-time:
         protected bool m_onGround = false;
+        protected Vector3 m_lastGroundedPos = Vector3.zero;
 
         private float m_rotationVelocity = 0f;
 
@@ -62,6 +63,7 @@ namespace Joeri.Tools.Movement
         }
 
         public bool onGround { get => m_onGround; }
+        public Vector3 lastGroundedPosition { get => m_lastGroundedPos; }
 
         //  Reference:
         public CharacterController controller { get; private set; }
@@ -100,6 +102,8 @@ namespace Joeri.Tools.Movement
             canRotate = settings.baseRotationTime < Mathf.Infinity;
 
             m_movementMask = settings.movementMask;
+
+            m_lastGroundedPos = root.transform.position;
         }
 
         /// <summary>
@@ -181,7 +185,12 @@ namespace Joeri.Tools.Movement
 
             var overlappingColliders = Physics.OverlapSphere(groundCheckOrigin, controller.radius, m_movementMask, QueryTriggerInteraction.Ignore);
 
-            return overlappingColliders.Length > 0;
+            if (overlappingColliders.Length > 0)
+            {
+                m_lastGroundedPos = controller.transform.position;
+                return true;
+            }
+            return false;
         }
 
         public bool ShouldStepDown()

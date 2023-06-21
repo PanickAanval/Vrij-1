@@ -44,6 +44,9 @@ public partial class Player : Entity
 
     public PlayerController movement        { get => GetMovement<PlayerController>(); }
 
+    public  bool onGround                   { get => m_movement.onGround; }
+    public Vector3 lastGroundedPosition     { get => m_movement.lastGroundedPosition; }
+
     public float carrySmoothTime            { get => m_grabHandler.m_carrySmoothTime; }
     public Transform grabPivot              { get => m_grabHandler.grabPivot; }
 
