@@ -8,8 +8,9 @@ public class PlayerLauncher : MonoBehaviour
 
     public event System.Action onLaunch = null;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
+        //  Quite an unoptimized way to detect the player falling on the launcher, but alas it's simple.
         if (!other.TryGetComponent(out Player player) || player.velocity.y >= 0) return;
 
         player.Launch(m_launchPower);
