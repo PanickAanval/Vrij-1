@@ -110,7 +110,7 @@ MonoBehaviour:
     baseSpeed: 3
     baseGrip: 3
     baseGravity: -9.81
-    baseRotationTime: 0.05
+    baseRotationTime: 0.3
     movementMask:
       serializedVersion: 2
       m_Bits: 55

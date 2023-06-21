@@ -19,7 +19,7 @@ partial class Player
             root.movement.gravity = root.m_moveSettings.baseGravity;
             root.movement.verticalVelocity = root.m_moveSettings.jumpForce;
 
-            base.OnEnter();
+            root.m_animator.CrossFade(settings.animation.name, 0f);
         }
 
         public override void OnTick(float deltaTime)

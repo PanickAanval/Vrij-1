@@ -50,7 +50,7 @@ MonoBehaviour:
     baseSpeed: 0
     baseGrip: 8
     baseGravity: -7.5
-    baseRotationTime: 0
+    baseRotationTime: 0.15
     movementMask:
       serializedVersion: 2
       m_Bits: 55

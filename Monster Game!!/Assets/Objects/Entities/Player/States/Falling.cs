@@ -45,7 +45,7 @@ partial class Player
 
             root.m_airDashAvailable = true;
 
-            root.SwitchAnimation(settings.landAnimation);
+            root.SwitchAnimation(settings.landAnimation, 0f);
             SwitchToState(typeof(Idle));
         }
 

@@ -16,6 +16,7 @@ partial class Player
         //  Properties:
         private Vector2 m_direction = Vector2.zero;
         private float m_speed = 0f;
+        private bool m_preparingForExit = false;
 
         //  Components:
         private Timer m_timer = null;
@@ -42,6 +43,11 @@ partial class Player
         public override void OnTick(float deltaTime)
         {
             root.controller.Move(root.velocity * deltaTime);
+
+            if (!m_preparingForExit && m_timer.percent > 0.8f)
+            {
+                root.m_animator.Play(settings.animation.name, -1, 0.8f);
+            }
 
             if (!m_timer.HasReached(deltaTime)) return;
             if (root.movement.onGround) SwitchToState(typeof(Idle));
