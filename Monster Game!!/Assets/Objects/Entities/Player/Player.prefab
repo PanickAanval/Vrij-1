@@ -154,7 +154,7 @@ MonoBehaviour:
       type: 3}
   m_grabHandler:
     radius: 1
-    offset: 1
+    offset: 0.5
     mask:
       serializedVersion: 2
       m_Bits: 64
