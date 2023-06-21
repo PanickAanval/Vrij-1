@@ -31,13 +31,13 @@ public partial class GlidyGeezer : Monster
 
     public override void OnGrab(Player player)
     {
-        m_stateMachine.SwitchToState<PickedUp>().Setup(player.carrySmoothTime, player.grabPivot);
+        base.OnGrab(player);
         player.moveSettings.fallMult = m_multSwapper.Swap(player.moveSettings.fallMult);
     }
 
     public override void OnRelease(Player player, Vector3 releaseVelocity)
     {
-        m_stateMachine.SwitchToState<Thrown>().Setup(releaseVelocity);
+        base.OnRelease(player, releaseVelocity);
         player.moveSettings.fallMult = m_multSwapper.Swap(player.moveSettings.fallMult);
     }
 }

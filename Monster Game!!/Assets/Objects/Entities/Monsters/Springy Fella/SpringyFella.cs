@@ -37,15 +37,5 @@ public partial class SpringyFella : Monster, IStandable
 
         player.Launch(m_launchPower);
     }
-
-    public override void OnGrab(Player player)
-    {
-        m_stateMachine.SwitchToState<PickedUp>().Setup(player.carrySmoothTime, player.grabPivot);
-    }
-
-    public override void OnRelease(Player player, Vector3 releaseVelocity)
-    {
-        m_stateMachine.SwitchToState<Thrown>().Setup(releaseVelocity);
-    }
 }
 

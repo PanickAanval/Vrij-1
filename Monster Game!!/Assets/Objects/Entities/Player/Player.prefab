@@ -120,7 +120,6 @@ MonoBehaviour:
       m_Bits: 119
     jumpForce: 8
     airGrip: 3
-    fallDrag: 0
     fallMult: 2.5
   m_animator: {fileID: 6957116355900542394}
   m_grabbing:
@@ -155,6 +154,7 @@ MonoBehaviour:
       type: 3}
   m_grabHandler:
     radius: 1
+    offset: 1
     mask:
       serializedVersion: 2
       m_Bits: 64

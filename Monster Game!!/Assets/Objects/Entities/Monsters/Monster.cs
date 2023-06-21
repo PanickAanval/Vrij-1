@@ -20,7 +20,13 @@ public abstract partial class Monster : Entity, IGrabbable
         m_movement = new AgentController(gameObject, m_moveSettings);
     }
 
-    public virtual void OnGrab(Player player) { }
+    public virtual void OnGrab(Player player)
+    { 
+        m_stateMachine.SwitchToState<PickedUp>().Setup(player.carrySmoothTime, player.grabPivot);
+    }
 
-    public virtual void OnRelease(Player player, Vector3 releaseVelocity) { }
+    public virtual void OnRelease(Player player, Vector3 releaseVelocity)
+    {
+        m_stateMachine.SwitchToState<Thrown>().Setup(releaseVelocity);
+    }
 }

@@ -13,6 +13,7 @@ public partial class Player
     {
         [Header("Grabbing:")]
         public float radius = 1f;
+        public float offset = 1f;
         public LayerMask mask;
 
         [Header("Carrying:")]
@@ -45,7 +46,7 @@ public partial class Player
         public void Tick()
         {
             if (m_state == State.Inactive) return;
-            m_hitBox.Overlap(grabPivot.position);
+            m_hitBox.Overlap(grabPivot.position + grabPivot.forward * offset);
         }
 
         public void SetState(State state)
@@ -65,7 +66,7 @@ public partial class Player
 
         public void DrawGizmos()
         {
-            m_hitBox.DrawGizmos(grabPivot.position, Color.red);
+            m_hitBox.DrawGizmos(grabPivot.position + grabPivot.forward * offset, Color.red);
         }
 
         public enum State { Active, Inactive }
