@@ -56,7 +56,8 @@ MonoBehaviour:
       m_Bits: 55
     jumpForce: 4
     airGrip: 0
-    fallMult: 0.33
+    fallMult: 0.11
+  m_defaultFadeDuration: 0.1
   m_animator: {fileID: 5295779762619199063}
   m_falling:
     animation: {fileID: 3242745120130798019, guid: 7d854ec4392807d42b84d1aa19558cb9,
