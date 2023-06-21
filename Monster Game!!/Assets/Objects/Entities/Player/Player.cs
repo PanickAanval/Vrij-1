@@ -8,11 +8,14 @@ using Joeri.Tools.Utilities;
 public partial class Player : Entity
 {
     [Header("States:")]
-    [SerializeField] private Grabbing.Settings m_grabbing;
-    [SerializeField] private Throwing.Settings m_throwing;
     [SerializeField] private Dashing.Settings m_dashing;
-    [Space]
-    [SerializeField] private AnimationSettings m_animations;
+    [SerializeField] private Falling.Settings m_falling;
+    [SerializeField] private Grabbing.Settings m_grabbing;
+    [SerializeField] private Idle.Settings m_idle;
+    [SerializeField] private Jumping.Settings m_jumping;
+    [SerializeField] private Launched.Settings m_launced;
+    [SerializeField] private Throwing.Settings m_throwing;
+    [SerializeField] private Walking.Settings m_walking;
 
     [Header("Player References:")]
     [SerializeField] private GrabbyHandler m_grabHandler;
@@ -52,13 +55,14 @@ public partial class Player : Entity
         m_movement = new PlayerController(gameObject, m_moveSettings);
         m_stateMachine = new FSM
             (
-                typeof(Walking),
-                new Walking(this),
-                new Falling(this),
-                new Jumping(this),
+                typeof(Idle),
+                new Idle(this, m_idle),
+                new Walking(this, m_walking),
+                new Falling(this, m_falling),
+                new Jumping(this, m_jumping),
                 new Grabbing(this, m_grabbing),
                 new Throwing(this, m_throwing),
-                new Launched(this),
+                new Launched(this, m_launced),
                 new Dashing(this, m_dashing)
             );
     }
@@ -74,23 +78,5 @@ public partial class Player : Entity
     public void Launch(float launchPower)
     {
         m_stateMachine.SwitchToState<Launched>().Setup(launchPower);
-    }
-
-    [System.Serializable]
-    public class AnimationSettings
-    {
-        public AnimationClip idle;
-        [Space]
-        public AnimationClip startJump;
-        public AnimationClip falling;
-        public AnimationClip jumpLand;
-        [Space]
-        public AnimationClip startRun;
-        public AnimationClip endRun;
-        [Space]
-        public AnimationClip dashing;
-        [Space]
-        public AnimationClip grabbing;
-        public AnimationClip throwing;
     }
 }

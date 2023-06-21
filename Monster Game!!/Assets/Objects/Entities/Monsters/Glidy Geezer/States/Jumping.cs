@@ -10,9 +10,9 @@ using Joeri.Tools.Debugging;
 
 public partial class GlidyGeezer
 {
-    public class Jumping : FlexState<GlidyGeezer>
+    public class Jumping : EntityState<GlidyGeezer>
     {
-        public Jumping(GlidyGeezer root) : base(root) { }
+        public Jumping(GlidyGeezer root, Settings settings) : base(root, settings) { }
 
         public override void OnEnter()
         {
@@ -20,6 +20,8 @@ public partial class GlidyGeezer
 
             root.movement.grip      = root.m_moveSettings.airGrip;
             root.movement.gravity   = root.m_moveSettings.baseGravity;
+
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)

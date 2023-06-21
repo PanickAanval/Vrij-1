@@ -8,7 +8,7 @@ using Joeri.Tools.Structure;
 
 public abstract partial class Monster
 {
-    public class PickedUp : FlexState<Monster>
+    public class PickedUp : EntityState<Monster>
     {
         //  Properties:
         private float m_followSpeed;
@@ -19,7 +19,7 @@ public abstract partial class Monster
         //  Reference:
         private Transform m_grabber;
 
-        public PickedUp(Monster root) : base(root) { }
+        public PickedUp(Monster root, Settings settings) : base(root, settings) { }
 
         public void Setup(float followSpeed, Transform grabber)
         {

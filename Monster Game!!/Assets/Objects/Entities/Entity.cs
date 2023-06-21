@@ -8,10 +8,11 @@ using Joeri.Tools.Structure;
 using Joeri.Tools.Movement;
 
 
-public abstract class Entity : MonoBehaviour
+public abstract partial class Entity : MonoBehaviour
 {
     [Header("Entity Properties:")]
     [SerializeField] protected ExtendedMovementSettings m_moveSettings;
+    [SerializeField] protected float m_defaultFadeDuration = 0.1f;
 
     [Header("Entity References:")]
     [SerializeField] protected Animator m_animator;
@@ -28,7 +29,12 @@ public abstract class Entity : MonoBehaviour
     protected MovementBase m_movement   = null;
     protected FSM m_stateMachine        = null;
 
-    public void SwitchAnimation(AnimationClip animation, float time = 0)
+    public void SwitchAnimation(AnimationClip animation)
+    {
+        SwitchAnimation(animation, m_defaultFadeDuration);
+    }
+
+    public void SwitchAnimation(AnimationClip animation, float time)
     {
         if (animation == null)
         {
@@ -61,5 +67,12 @@ public abstract class Entity : MonoBehaviour
         [Min(0f)]   public float airGrip    = 3f;
         [Space]
         [Min(0f)]   public float fallMult   = 1f;
+    }
+
+    [System.Serializable]
+    public class Animations
+    {
+        public AnimationClip idle;
+        public AnimationClip falling;
     }
 }

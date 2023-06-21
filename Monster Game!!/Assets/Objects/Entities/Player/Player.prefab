@@ -121,36 +121,47 @@ MonoBehaviour:
     jumpForce: 8
     airGrip: 3
     fallMult: 2.5
+  m_defaultFadeDuration: 0
   m_animator: {fileID: 6957116355900542394}
-  m_grabbing:
-    speed: 15
-    drag: 10
-    time: 0.5
-  m_throwing:
-    strength: 5
-    drag: 15
-    time: 0.75
   m_dashing:
+    animation: {fileID: -2246502780319343731, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+      type: 3}
     distance: 5
     time: 0.3
     exitSpeed: 9
-  m_animations:
-    idle: {fileID: -8945691123924629249, guid: cc5e6b80fd5c27642b81ee10672c5d71, type: 3}
-    startJump: {fileID: 5277777409621656941, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+  m_falling:
+    animation: {fileID: -3355346282122423785, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
-    falling: {fileID: -3355346282122423785, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+    landAnimation: {fileID: -2400424121681697209, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
-    jumpLand: {fileID: -2400424121681697209, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+  m_grabbing:
+    animation: {fileID: 3997614985018663949, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
-    startRun: {fileID: 6889643886440078966, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+    exitAnimation: {fileID: -8945691123924629249, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
-    endRun: {fileID: -1339833477917704532, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+    speed: 15
+    drag: 10
+    time: 0.5
+  m_idle:
+    animation: {fileID: 0}
+  m_jumping:
+    animation: {fileID: 5277777409621656941, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
-    dashing: {fileID: -2246502780319343731, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+  m_launced:
+    animation: {fileID: 5277777409621656941, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
-    grabbing: {fileID: 3997614985018663949, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+  m_throwing:
+    animation: {fileID: 9083654474561383684, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
-    throwing: {fileID: 9083654474561383684, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+    exitAnimation: {fileID: -8945691123924629249, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+      type: 3}
+    strength: 5
+    drag: 15
+    time: 0.75
+  m_walking:
+    animation: {fileID: 6889643886440078966, guid: cc5e6b80fd5c27642b81ee10672c5d71,
+      type: 3}
+    endRunAnimation: {fileID: -1339833477917704532, guid: cc5e6b80fd5c27642b81ee10672c5d71,
       type: 3}
   m_grabHandler:
     radius: 1

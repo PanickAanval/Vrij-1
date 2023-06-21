@@ -9,9 +9,9 @@ using Joeri.Tools.Debugging;
 
 public partial class SpringyFella
 {
-    public class Idle : FlexState<SpringyFella>
+    public class Idle : EntityState<SpringyFella>
     {
-        public Idle(SpringyFella root) : base(root) { }
+        public Idle(SpringyFella root,Settings settings) : base(root, settings) { }
 
         public override void OnEnter()
         {
@@ -19,6 +19,8 @@ public partial class SpringyFella
             root.movement.grip = root.m_moveSettings.baseGrip;
             root.movement.gravity = 0f;
             root.movement.verticalVelocity = 0f;
+
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)

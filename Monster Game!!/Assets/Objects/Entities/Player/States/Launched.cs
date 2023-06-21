@@ -8,9 +8,9 @@ using Joeri.Tools.Structure;
 
 public partial class Player
 {
-    public class Launched : FlexState<Player>
+    public class Launched : EntityState<Player>
     {
-        public Launched(Player root) : base(root) { }
+        public Launched(Player root, Settings settings) : base(root, settings) { }
 
         public void Setup(float launchPower)
         {
@@ -22,7 +22,7 @@ public partial class Player
             root.movement.grip = root.m_moveSettings.airGrip;
             root.movement.gravity = root.m_moveSettings.baseGravity;
 
-            root.SwitchAnimation(root.m_animations.startJump);
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)

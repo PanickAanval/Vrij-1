@@ -10,11 +10,11 @@ using Joeri.Tools.Debugging;
 
 public partial class SpringyFella
 {
-    public class Stunned : FlexState<SpringyFella>
+    public class Stunned : EntityState<SpringyFella>
     {
         private Timer m_timer = null;
 
-        public Stunned(SpringyFella root) : base(root) { }
+        public Stunned(SpringyFella root, Settings settings) : base(root, settings) { }
 
         public override void OnEnter()
         {
@@ -25,6 +25,8 @@ public partial class SpringyFella
             root.movement.grip = root.m_moveSettings.baseGrip;
             root.movement.gravity = 0f;
             root.movement.verticalVelocity = 0f;
+
+            base.OnEnter();
         }
 
         public override void OnTick(float deltaTime)

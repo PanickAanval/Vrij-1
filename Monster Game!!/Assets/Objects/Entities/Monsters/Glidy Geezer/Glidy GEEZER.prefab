@@ -56,10 +56,25 @@ MonoBehaviour:
       m_Bits: 55
     jumpForce: 4
     airGrip: 0
-    fallMult: 0.11
-  m_animator: {fileID: 0}
+    fallMult: 0.33
+  m_animator: {fileID: 5295779762619199063}
+  m_falling:
+    animation: {fileID: 3242745120130798019, guid: 7d854ec4392807d42b84d1aa19558cb9,
+      type: 3}
+  m_pickedUp:
+    animation: {fileID: 3242745120130798019, guid: 7d854ec4392807d42b84d1aa19558cb9,
+      type: 3}
+  m_thrown:
+    animation: {fileID: -2578200988940760635, guid: 7d854ec4392807d42b84d1aa19558cb9,
+      type: 3}
   m_rotationTime: 2
   m_rotateAmount: 180
+  m_rotating:
+    animation: {fileID: -5899206896067890013, guid: 7d854ec4392807d42b84d1aa19558cb9,
+      type: 3}
+  m_jumping:
+    animation: {fileID: -2578200988940760635, guid: 7d854ec4392807d42b84d1aa19558cb9,
+      type: 3}
 --- !u!143 &5940250761479653742
 CharacterController:
   m_ObjectHideFlags: 0
@@ -147,6 +162,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d854ec4392807d42b84d1aa19558cb9, type: 3}
+--- !u!1 &7011872999202890609 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d854ec4392807d42b84d1aa19558cb9,
+    type: 3}
+  m_PrefabInstance: {fileID: 7894322541218045472}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5295779762619199063
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011872999202890609}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d4895f8d3072a9a4bb53025896b58755, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!4 &7639510122491050443 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7d854ec4392807d42b84d1aa19558cb9,

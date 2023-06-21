@@ -17,6 +17,10 @@ public class Camera : MonoBehaviour
     [SerializeField] private float m_referenceSpeed = 3f;
     [SerializeField] private float m_adjustmentTime = 3f;
 
+    [Header("Anti-Clipping:")]
+    [SerializeField] private LayerMask m_clippingMask;
+    [SerializeField] private float m_clippingOffset = 0.1f;
+
     //  Orbiting data:
     private Orbit m_orbit = new Orbit();
     private Vector3 m_orbitCenter = Vector3.zero;
@@ -51,7 +55,7 @@ public class Camera : MonoBehaviour
     {
         //  Position:
         transform.position = GetDesiredPosition(input, playerVel, deltaTime);
-        if (onPosOver != null) transform.position = onPosOver.Invoke(transform.position);
+
 
         //  Rotation:
         transform.rotation = Quaternion.LookRotation(m_target.position - transform.position, Vector3.up);
@@ -61,7 +65,18 @@ public class Camera : MonoBehaviour
     private Vector3 GetDesiredPosition(Vector2 input, Vector2 playerVel, float deltaTime)
     {
         m_orbitCenter = Vector3.SmoothDamp(m_orbitCenter, m_target.position, ref m_followVelocity, m_followTime);
-        return m_orbitCenter + GetDesiredOffset(input, playerVel, deltaTime);
+
+        var position = m_orbitCenter + GetDesiredOffset(input, playerVel, deltaTime);
+
+        if (onPosOver != null)
+        {
+            position = onPosOver.Invoke(position);
+        }
+        if (Physics.Raycast(m_orbitCenter, position - m_orbitCenter, out RaycastHit hit, m_orbit.distance, m_clippingMask, QueryTriggerInteraction.Ignore))
+        {
+            position = hit.point + hit.normal * m_clippingOffset;
+        }
+        return position;
     }
 
     /// <returns>The desired offset from the player.</returns>
