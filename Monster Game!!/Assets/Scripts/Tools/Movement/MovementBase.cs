@@ -67,17 +67,19 @@ namespace Joeri.Tools.Movement
         public CharacterController controller { get; private set; }
 
         //  Utilities:
-        protected Vector3 groundCheckOrigin
+        protected Vector3 lowerOrbCenter
         {
             get
             {
                 var position = controller.transform.position + controller.center;
 
-                position += Vector3.down * controller.height / 2;                             //  Go to the bottom of the controller's collider.
-                position += Vector3.up * (controller.radius - controller.skinWidth * 2);    //  Set the center so that the overlap slightly reaches under the collider.
+                position += Vector3.down * controller.height / 2;   //  Go to the bottom of the controller's collider.
+                position += Vector3.up * controller.radius;         //  Set the center so that the overlap slightly reaches under the collider.
                 return position;
             }
         }
+
+        protected Vector3 groundCheckOrigin { get => lowerOrbCenter + Vector3.down * controller.skinWidth * 2; }
 
         #endregion
 
@@ -158,12 +160,9 @@ namespace Joeri.Tools.Movement
         /// </summary>
         private void ApplyVelocity(float deltaTime)
         {
-            if (canRotate && flatVelocity != Vector2.zero)
-            {
-                RotateToVelocity(deltaTime);
-            }
+            if (canRotate && flatVelocity != Vector2.zero) RotateToVelocity(deltaTime);
             controller.Move(velocity * deltaTime);
-
+            if (IsOnGround() && ShouldStepDown()) controller.Move(Vector3.down * controller.stepOffset);
             m_onGround = IsOnGround();
         }
 
@@ -183,6 +182,14 @@ namespace Joeri.Tools.Movement
             var overlappingColliders = Physics.OverlapSphere(groundCheckOrigin, controller.radius, m_movementMask, QueryTriggerInteraction.Ignore);
 
             return overlappingColliders.Length > 0;
+        }
+
+        public bool ShouldStepDown()
+        {
+            if (!m_onGround) return false;              //  Return if the player was not standing on ground the previous frame.
+            if (verticalVelocity > 0f) return false;    //  Return if the player is moving upward.
+            if (!Physics.Raycast(controller.transform.position, Vector3.down, out RaycastHit hit, controller.stepOffset, m_movementMask, QueryTriggerInteraction.Ignore)) return false;
+            return true;
         }
 
         /// <summary>
