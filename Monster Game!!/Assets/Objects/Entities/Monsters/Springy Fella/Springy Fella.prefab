@@ -117,10 +117,55 @@ MonoBehaviour:
     jumpForce: 0
     airGrip: 0
     fallMult: 1
-  m_animator: {fileID: 0}
+  m_defaultFadeDuration: 0.5
+  m_animator: {fileID: 465116886036894214}
+  m_falling:
+    animation: {fileID: 7400000, guid: b7d7507ef467da440b5922eff44aa2d9, type: 2}
+  m_pickedUp:
+    animation: {fileID: 7400000, guid: b7d7507ef467da440b5922eff44aa2d9, type: 2}
+  m_thrown:
+    animation: {fileID: 7400000, guid: b7d7507ef467da440b5922eff44aa2d9, type: 2}
   m_detectionRange: 5
   m_lookAheadTime: 0.1
   m_stunnedTime: 6
+  m_idle:
+    animation: {fileID: 7400000, guid: b7d7507ef467da440b5922eff44aa2d9, type: 2}
+  m_follow:
+    animation: {fileID: 5906473778213704605, guid: 6b873ea7ac5555e47b00cf8d1f82b652,
+      type: 3}
+  m_launching:
+    animation: {fileID: -4313089263862635664, guid: 6b873ea7ac5555e47b00cf8d1f82b652,
+      type: 3}
+    duration: 0.5
+  m_stunned:
+    animation: {fileID: 5906473778213704605, guid: 6b873ea7ac5555e47b00cf8d1f82b652,
+      type: 3}
+    rotationCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 3.285883
+        outSlope: 3.285883
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.26987952
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    rotationSpeed: 720
+    duration: 2
   m_launcher: {fileID: 5868856020929774878}
 --- !u!143 &8688860590908333360
 CharacterController:
@@ -235,3 +280,29 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6336633577960079241}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6571129518882439896 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6b873ea7ac5555e47b00cf8d1f82b652,
+    type: 3}
+  m_PrefabInstance: {fileID: 6336633577960079241}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &465116886036894214
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6571129518882439896}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0542c3a8a526c55428c2e082359c2b58, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
