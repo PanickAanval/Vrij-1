@@ -46,6 +46,8 @@ partial class Player
             root.m_airDashAvailable = true;
 
             root.SwitchAnimation(settings.landAnimation, 0f);
+            GameManager.instance.particles.SpawnPoomf(root.transform.position);
+
             SwitchToState(typeof(Idle));
         }
 

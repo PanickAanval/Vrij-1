@@ -29,7 +29,13 @@ public partial class Monster
 
         public override void OnTick(float deltaTime)
         {
-            if (root.movement.onGround) { SwitchToState(m_returnState); return; }
+            if (root.movement.onGround)
+            {
+                GameManager.instance.particles.SpawnPoomf(root.transform.position);
+
+                SwitchToState(m_returnState); 
+                return; 
+            }
             root.movement.ApplyDesiredVelocity(Vector2.zero, deltaTime);
         }
     }

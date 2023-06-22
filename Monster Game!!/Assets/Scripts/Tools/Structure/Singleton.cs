@@ -14,13 +14,9 @@ namespace Joeri.Tools.Structure
             }
             set
             {
-                if (m_instance == null)
-                {
-                    m_instance = value;
-                    return;
-                }
+                if (m_instance != null) Debug.LogWarning($"Singleton already has an instance set. Overriding..");
+                m_instance = value;
 
-                Debug.LogError($"Singleton already has an instance set.");
             }
         }
     }
