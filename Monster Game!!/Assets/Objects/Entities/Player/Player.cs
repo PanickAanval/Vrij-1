@@ -21,6 +21,7 @@ public partial class Player : Entity
     [SerializeField] private GrabbyHandler m_grabHandler;
     [Space]
     [SerializeField] private Transform m_center;
+    [SerializeField] private ParticleSystem m_dashParticles;
 
     //  Cache:
     private Controls.Results m_input;
@@ -50,6 +51,12 @@ public partial class Player : Entity
     public float carrySmoothTime            { get => m_grabHandler.m_carrySmoothTime; }
     public Transform grabPivot              { get => m_grabHandler.grabPivot; }
 
+    public bool enableDashEffects
+    {
+        get => m_dashParticles.enableEmission;
+        set => m_dashParticles.enableEmission = value;
+    }
+
     #endregion
 
     public void Setup()
@@ -68,6 +75,8 @@ public partial class Player : Entity
                 new Launched(this, m_launced),
                 new Dashing(this, m_dashing)
             );
+
+        enableDashEffects = false;
     }
 
     public void Tick(Controls.Results input, float deltaTime, float cameraAngle)

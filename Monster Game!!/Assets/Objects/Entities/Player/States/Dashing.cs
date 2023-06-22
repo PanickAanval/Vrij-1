@@ -37,6 +37,8 @@ partial class Player
             m_speed = settings.time > 0f ? settings.distance / settings.time : settings.distance;
             m_timer = new Timer(settings.time);
 
+            root.enableDashEffects = true;
+
             base.OnEnter();
         }
 
@@ -60,6 +62,7 @@ partial class Player
             m_speed = 0f;
 
             root.flatVelocity = root.flatVelocity.normalized * settings.exitSpeed;
+            root.enableDashEffects = false;
 
             m_timer = null;
         }
